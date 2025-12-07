@@ -138,7 +138,10 @@ This code followed a bit of a different story. The development that this code to
 Runs beyond Run 2 were to try and get a round of code that would integrate the successes of these two cases with the first-run success of 61x67; this proved unsuccessful. 
 
 The model's winning strategy proved to be somewhat successful, but after looking at what it took to hit the target miss rate in the human-generated code, this makes sense. From what I was able to understand of the code, it followed three major phases: 
-- Handled the first four rows of each 8x8 block in a standard fashion. 
+- Handled the first four rows of each 8x8 block in a standard fashion, starting from the top left. 
+- Switched to a different strategy that involved breaking it down into further 4x4 blocks and transposing them in a specific order. This seemed to handle two or three of the four 4x4 blocks that the the code partitioned off. This was the only section of code out of the three cases that used the eight extra variables alotted to it. 
+- Finished off the final 4x4 block with a more standard transpose techniques. 
+
 
 ==== _61x67_
 This test case ended up being one of the simplest, with the best results happening with very few lines of code and with the fewest number of attempts. 
@@ -147,7 +150,19 @@ First run - instantly met the miss rate criteria. This code managed to just sque
 Second run - like with all of the others, this was invalid due to issues with the code. 
 Third run - This was the first run to nail the other two cases, but this (somehow) came at breaking the 61x67 case despite explicitly prompting the model to keep the original working code. I have yet to see whether the reason that the code broke was due to actual changes in the code or due to side effects from previous runs. 
 
-==== (Individually Winning) Strategies for Each Case. 
+The winning strategy for the 61x67 case was fairly simple and adopted most of the code from the standard 8x8 blocking strategy. The main change involved extra checks on the outer loops (given the irregular size) to handle not writing too much or too little on either of the dimensions. The inner loops employed the naive implementation. 
+
+=== Code Quality
+Some important aspects in measuring code quality involve legibility, conciseness, and correctness. In all, it looks like the model was able to produce code that I could mostly follow. 
+For the 64x64 case, the code was not terribly concise, which made it difficult to parse. However, it was able to generate a satisfactory result. The other cases could be distilled down to simple code that did not require any lines. This made it concise and easy to follow. 
+Lastly, correctness seem to be hit or miss. I was not able to get all three of the individual cases to cooperate with each other in the same function (begging the question about if registering three different functions would have been better). However, over three iterations, I was eventually able to get individual cases for all three. 
+
+In addition to these main three cases, other basic conventions were followed. I was able to understand the readability and structure and the motivations behind implementing them. 
+
+*nathan note*: elaborate more on the comparison between human and genAI code, strengths and weaknesses, 
+- create csv with the results. 
+- ask soraya about how to organize when chatgpt decided to make one large unit of a function. 
+- maybe prompt more? see if there is more exploration to be had that could expand the story. 
 
 
 
