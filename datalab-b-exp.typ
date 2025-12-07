@@ -29,11 +29,15 @@ The human generated code was developed in the following order:
 The most useful approach to each of these problems was developed by the approach to the first. Picture/color representations of the set overlays on the matrics were generated to a degree in which the problematic miss rate areas were visibly simple to identify. Then, as will be discussed in the data collection portion of this report, solutions to mitigate these miss rates were developed based upon successful changes.
 
 === GenAI
+The genAI code was developed with ChatGPT 5 mini (with reasoning), which is the version of ChatGPT offered on a trial basis to those who have an OpenAI account but do not pay for any other tier. The model opted to approach the code in a rather monolothic manner and generated code for all three cases to put into one function. 
+
+When provided with code from the model, I replaced whatever code was already in the `transpose-submit` function and performed a direct replacement of all of the code, even if 1 or 2 out of the three ended up correct during the previous iteration. This was likely a suboptimal approach, but it demonstrates the deficiencies of ChatGPT's "memory". It likely would have been beneficial to split up the code generation into three different chunks to allow the model to analyze each case separately. The results of this method will be discussed later in the report. 
 
 == Data Collection
 The following section goes into depth on the processes of generating solutions, both human and genAI alike. 
 
 === Human
+
 
 ==== Code Generation
 The following discussion of code generation will be presented from worst attempt to best attempt (or, the final submission that accomplishes a miss cound under the minimum bound for each matrix). It should be noted that the attempts were not necessarily in a purely successful order, but will be presented as such for clarity.
@@ -95,6 +99,55 @@ _Notes for roxanne_
 
 
 === GenAI
+
+For the genAI section of the code, ChatGPT 5 mini (with intelligence) was handed the entire PDF, in addition to some instructions I provided to it: 
+
+#block(
+  fill: luma(230),
+  inset: 8pt,
+  radius: 4pt,
+  "Hello, I am working on the CS:APP cache lab and was wondering how familiar you are with it. Given the assignment PDF, I was hoping that you could review it, confirm to me that you understand the goals of the assignment, and generate output that meets the criteria to the best of your ability.
+"
+)
+
+From this, ChatGPT reiterated to me what it understood about the assignment and opted to handle all matrix sizes at the same time. To handle this, it uses if statements and calls to `return` in the case that the 32x32 or 64x64 case is being processed. The 61x67 case is processed until the end of the function call. 
+
+Below, I discuss:
+- The results of each revolution of the code. 
+- The strategy that the model employed at each setup
+- What ended up being the winning strategy for each case, despite the three cases not able to exist in harmony with each other
+- Future experiments to conduct with the code to see if improvements are made (i.e. what if, instead of one monolothic function call, there were three smaller function calls for each case?)
+
+==== _32x32_
+
+The 32x32 case, despite being the "simplest",was a case that was difficult for the model to score well on immediately. It took about four attempts to generate code that hit under 300 misses. 
+- First run: ran correctly, but was unable to reach the desired miss threshold at 344. 
+- Second run: all three cases including 32x32 were 0. This does not seem to be well-defined behavior and indicates to me that the model generated code that broke the tester. 
+- Third run: After some troubleshooting to deal with the previous run, this was the first iteration of the code to generate output that yielded 288 runs. This unfortunately came at the cost of breaking one of the other cases in code. 
+
+In addition to succeeding with the 32x32 case, the secondary goal was to remedy issues that were occurring with the final test case of 61x67. Despite instruction to maintain the previously working case, some issues still managed to arise. This leads me to believe that there were some side effects as the result of the "properly working" 64x64 code that went under the miss rate.
+
+The winning strategy for this case ended up being pretty simple, employing 8x8 blocking and solving each block individually with the naive method. With less data to handle at each step, less cache misses were recorded.
+
+==== _64x64_
+This code followed a bit of a different story. The development that this code took leads me to believe that there may be some side effects with some of the variables being used, since I am not fully sure what else could be happening. (the model maintained the same structure and order in the code as it did previously). 
+- First run: invalid result. This code iteration produced suboptimal yet valid 32x32 code and right-on-the-spot 61x67 code, which was strange. Taking a quick glance at the code, I was never fully able to determine the cause of this issue. 
+- Second run: Like with other versions, the code that was generated produced 0 misses, which is effectively impossible and indicates that some sort of issue occurred with this iteration. I prompted ChatGPT to revisit this code and ensure that the setup was being conducted properly. 
+- Third run: Like with the 32x32 case, the 64x64 code hit well under the miss target of 1300 and netted 1180 misses. This came at the cost of breaking the 61x67 test case. 
+
+Runs beyond Run 2 were to try and get a round of code that would integrate the successes of these two cases with the first-run success of 61x67; this proved unsuccessful. 
+
+The model's winning strategy proved to be somewhat successful, but after looking at what it took to hit the target miss rate in the human-generated code, this makes sense. From what I was able to understand of the code, it followed three major phases: 
+- Handled the first four rows of each 8x8 block in a standard fashion. 
+
+==== _61x67_
+This test case ended up being one of the simplest, with the best results happening with very few lines of code and with the fewest number of attempts. 
+
+First run - instantly met the miss rate criteria. This code managed to just squeeze under the miss rate of 2,000 at 1,993 misses with about 2 dozen lines of code. 
+Second run - like with all of the others, this was invalid due to issues with the code. 
+Third run - This was the first run to nail the other two cases, but this (somehow) came at breaking the 61x67 case despite explicitly prompting the model to keep the original working code. I have yet to see whether the reason that the code broke was due to actual changes in the code or due to side effects from previous runs. 
+
+==== (Individually Winning) Strategies for Each Case. 
 
 
 
