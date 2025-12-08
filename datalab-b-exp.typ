@@ -12,6 +12,14 @@
 == Introduction and Motivation
 
 
+
+This report is organized into 5 sections beyond this Introduction.
++ Methods: General summary of methods used to generate both human and genAI code for transposition.
++ Data Collection: In depth discussion of the process in which human code was created, including failues. Likewise, in depth discussion of prompting attempts with genAI to generate code with the same goal.
++ Exploratory Analysis and Discussion: Discussion of results and primary differences in code approaches.
++ Conclusion: Concluding points of the report.
++ Appendix: Brief inclusion of documentation details about documents included with submission
+
 == Methods
 
 This project was primarily split into two natural halves between the two partners: 
@@ -173,7 +181,6 @@ The model's winning strategy proved to be somewhat successful, but after looking
 + Switched to a different strategy that involved breaking it down into further _4x4_ blocks and transposing them in a specific order. This seemed to handle two or three of the four _4x4_ blocks that the the code partitioned off. This was the only section of code out of the three cases that used the eight extra variables alotted to it. 
 + Finished off the final _4x4_ block with a more standard transpose techniques. 
 
-
 ==== _61x67_
 This test case ended up being one of the simplest, with the best results happening with very few lines of code and with the fewest number of attempts. 
 
@@ -259,28 +266,25 @@ We nevertheless must discuss understandibility in two contexts: (1) Understandin
 
 On understanding the code from a technical perspective, the human code submitted has the benefit of the comments being as verbose as needed--as much for the developer as for the reader. Considering at least the _64x64_ is an admittedly long and somewhat convoluted solution for the human code, these comments are necessary to even begin to piece together what we are doing mechanically. 
 
-On the topic of convlusion, the genAI solutions have the perk of having the same or less number lines overall. This is a huge improvement over the human code specifically for the _64x64_, which comes into about _133_ lines, as opposed to the _70_ line solution from ChatGPT that even performed better than the human solution. 
+On the topic of convlusion, the genAI solutions have the perk of having the same or less number lines overall. This is a huge improvement over the human code specifically for the _64x64_, which comes into about _133_ lines, as opposed to the _70_ line solution from ChatGPT that even performed better than the human solution. Generally, the shorter solution is easier to digest, along with straightforward commenting to interpret the intention of the code. 
 
+This topic naturally leads into discussing the second point: understanding why the code works. We are able to see the general mechanics of the genAI code functionality as specified in comments. A drawback, nevertheless, is in missing why this code works. 
 
-
-
+When discussing the human code development process, and walking through all failures, we can see the exact train of thought that led to the final solution, starting with the most basic algorithm to the best. This is exactly what we miss in ChatGPT code. There has to be further prompting in order to get the explanation of why exactly this works. Even then, there has to be an element of wariness when reading the explanation due to the potential hallucinations of the black-box. The human instead has an explanation that can be built up from failures and data to support the next step justification, making the process more understandable at a deeper level. Additionally, the process can be read by others to improve upon, since others may see some sort of successful alternate approach from the development process that the original developer did not recognize. In all, the end answer is not always the only useful piece of the solution process.
 
 ==== Methodical Development
 
-----------------------------------------------------
-Surprisingly, the square matrices ended up being the most complicated to analyze, whereas the rectangular size ended up being simpler to optimize toward the goal, especially since it did not have the same horrendous diagonal overlap thrashing. However, it still has a far higher miss rate than the other matrices, making it still far less efficient in terms of cache usage.
-----------------------------------------------
+As evidenced a discussed prior, ChatGPT's greatest downfall in this process was the ability for it to ignore prompting, break its own code, and output unpredictably. This was, as seen by the secondary prompting technique of generating methods versus generating solutions all in one fixing many of the issues, a fault of the prompting. Just as people do, ChatGPT performed far better in terms of generating a functional solution by forcing it to separate the problems into separate but related pieces. 
 
-=== Potential Improvements
+Naturally, the human code was generated starting with the perceived simplest matrix first (_32x32_) and working towards the harder cases (_64x64_, _61x67_). This methodical development made it simpler to use known successful techniques in the harder cases and then tailor the solutions according to the unique problem needs. We will therefore hypothesize that this would have been a similiarly better tactic in prompting genAI to produce a faster success. Further trials should be conducted on this strategy to verify, but so far this experiment suggests that this is the case.
 
-=== Additional Notes
+Finally, as easy as it is to cast stones at genAI for having unpredictable side-effects and breaking its own code, there were admittedly many times that the human code did the same thing while testing functionality. Typically nothing was being broken outside of a specific method, but the potential for mistakes in complicated solution implementation was very high during human development. So, with more focused prompting, genAI shaves much of that headache successfully.
 
 
 
 == Conclusion
 
 
-== References
-
-
 == Appendix
+
+=== Documentation Details
