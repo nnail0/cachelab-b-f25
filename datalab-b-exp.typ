@@ -202,12 +202,9 @@ In addition to these main three cases, other basic conventions were followed. Th
 - ask soraya about how to organize when chatgpt decided to make one large unit of a function. 
 - maybe prompt more? see if there is more exploration to be had that could expand the story. 
 
-
-
 == Exploratory Analysis and Discussion 
 
-
-==== Discussion
+=== BULLSHIT DUMP
 _Notes for roxanne_
 + maybe talk about how long it took to get these ideas?
 + discuss the time taken to consider the set overlays-this was the key way to generate a successful solution; include pngs aside to report? ask soraya
@@ -215,6 +212,43 @@ _Notes for roxanne_
 + discuss benefit of deep understanding gotten from the process of failure despite frustration 
 
 Surprisingly, the square matrices ended up being the most complicated to analyze, whereas the rectangular size ended up being simpler to optimize toward the goal, especially since it did not have the same horrendous diagonal overlap thrashing. However, it still has a far higher miss rate than the other matrices, making it still far less efficient in terms of cache usage.
+
+=== Results
+
+Overall, we were able to generate successful under-bound solutions both on the human and genAI side of code generation. Following is the comparsion of the best results from both sides.
+
+#set align(center)
+
+#table(
+  columns: (auto, 1fr, 1fr),
+  inset: 10pt,
+  align: center,
+  table.header(
+    [*Sizes*], [*Human Best*], [*GenAI Best*],
+  ),
+  [*_32x32_*],
+  [288],
+  [288],
+  [*_64x64_*],
+  [1268],
+  [1180],
+  [*_61x67_*],
+  [1914],
+  [1993]
+)
+
+#set align(left)
+
+
+
+
+=== Code Generation Comparisons
+
+=== Potential Improvements
+
+=== Additional Notes
+
+
 
 == Conclusion
 
