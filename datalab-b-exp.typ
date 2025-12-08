@@ -113,7 +113,7 @@ For the genAI section of the code, ChatGPT 5 mini (with intelligence) was handed
 From this, ChatGPT reiterated to me what it understood about the assignment and opted to handle all matrix sizes at the same time. To handle this, it uses if statements and calls to `return` in the case that the 32x32 or 64x64 case is being processed. The 61x67 case is processed until the end of the function call. 
 
 Below, I discuss:
-- The results of each revolution of the code. 
+- The results of each evolution of the code. 
 - The strategy that the model employed at each setup
 - What ended up being the winning strategy for each case, despite the three cases not able to exist in harmony with each other
 - Future experiments to conduct with the code to see if improvements are made (i.e. what if, instead of one monolothic function call, there were three smaller function calls for each case?)
@@ -151,6 +151,11 @@ Second run - like with all of the others, this was invalid due to issues with th
 Third run - This was the first run to nail the other two cases, but this (somehow) came at breaking the 61x67 case despite explicitly prompting the model to keep the original working code. I have yet to see whether the reason that the code broke was due to actual changes in the code or due to side effects from previous runs. 
 
 The winning strategy for the 61x67 case was fairly simple and adopted most of the code from the standard 8x8 blocking strategy. The main change involved extra checks on the outer loops (given the irregular size) to handle not writing too much or too little on either of the dimensions. The inner loops employed the naive implementation. 
+
+=== Second Attempt: Three Separate functions
+I had a feeling that there were some side effects occurring under the hood as a result of having all three cases in the same function. As a result, I prompted the model to make another attempt. This time, I gave it explicit directions to split the code into three separate cases. This ended up being the solution. 
+
+Upon closer inspection, it appears that ChatGPT added in some corrections to the 32x32 code, which makes me wonder more about where exactly the problem was happening before. Regardless, it appears that the model was able to reflect on its own mistakes from a previous conversation and find what went wrong. This could point to the previously mentioned "short-term memory" issue that I was mentioning earlier, or it could be something different. 
 
 === Code Quality
 Some important aspects in measuring code quality involve legibility, conciseness, and correctness. In all, it looks like the model was able to produce code that I could mostly follow. 
