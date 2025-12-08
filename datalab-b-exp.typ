@@ -42,7 +42,7 @@ The following discussion of code generation will be presented from worst attempt
 
 The subsections as follows are the order, as mentioned, the human code was generated in overall. They will include, in context, a discussion of attempts made, what was learned from the failure of the attempt, leading to how the final optimized function was created.
 
-===== _32x32_
+==== _32x32_
 
 As with all of the attempts made, the initial _32x32_ baseline miss rate was found through the simple `trans` function given. At worst, the number of misses was _1184_. A far-cry from where the miss bound needed to be at _< 300_, there was some exploring to be done on how the sets of the cache laid.
 
@@ -80,7 +80,7 @@ if (i == j) { // if we're in a "diagonal block"
 
 With this careful management of thrashing, we manage to plummet the miss rate below our boundary: *_288_* misses.
 
-===== _64x64_
+==== _64x64_
 
 As with the _32x32_, we will start with a baseline of running the `trans` function to identify the worst-case miss rate, which comes in far higher than the prior square at _4724_ misses.
 
@@ -104,7 +104,7 @@ Instead of using the blocks next to each diagonal, we will instead use one consi
 
 Note that all code for these attempts can be found in `trans-human.c`. It will be kept there due to length of the functions, since even snippets of that code are many lines in length.
 
-===== _61x67_
+==== _61x67_
 
 Yet again, we will consider the baseline miss rate by running the transposition functionality with the given typical trans function. This yields a base miss rate that is about as high as the _64x64_ baseline: _4424_.
 
@@ -131,7 +131,7 @@ this effectively move the B storage blocks left-right row-wise and A access bloc
 
 === GenAI
 
-For the genAI section of the code, ChatGPT 5 mini (with intelligence) was handed the entire PDF, in addition to some instructions I provided to it: 
+For the genAI section of the code, ChatGPT 5 mini (with intelligence) was handed the entire PDF, in addition to some instructions provided to it: 
 
 #block(
   fill: luma(230),
@@ -141,24 +141,24 @@ For the genAI section of the code, ChatGPT 5 mini (with intelligence) was handed
 "
 )
 
-From this, ChatGPT reiterated to me what it understood about the assignment and opted to handle all matrix sizes at the same time. To handle this, it uses if statements and calls to `return` in the case that the 32x32 or 64x64 case is being processed. The 61x67 case is processed until the end of the function call. 
+From this, ChatGPT reiterated what it understood about the assignment and opted to handle all matrix sizes at the same time. To handle this, it uses if statements and calls to `return` in the case that the _32x32_ or _64x64_ case is being processed. The _61x67_ case is processed until the end of the function call. 
 
-Below, I discuss:
+Below, we discuss:
 - The results of each evolution of the code. 
-- The strategy that the model employed at each setup
-- What ended up being the winning strategy for each case, despite the three cases not able to exist in harmony with each other
-- Future experiments to conduct with the code to see if improvements are made (i.e. what if, instead of one monolothic function call, there were three smaller function calls for each case?)
+- The strategy that the model employed at each setup.
+- What ended up being the winning strategy for each case, despite the three cases not able to exist in harmony with each other.
+- Future experiments to conduct with the code to see if improvements are made (i.e. what if, instead of one monolothic function call, there were three smaller function calls for each case?).
 
 ==== _32x32_
 
-The 32x32 case, despite being the "simplest",was a case that was difficult for the model to score well on immediately. It took about four attempts to generate code that hit under 300 misses. 
+The 32x32 case, despite being the "simplest", was a case that was difficult for the model to score well on immediately. It took about four attempts to generate code that hit under _300_ misses. 
 - First run: ran correctly, but was unable to reach the desired miss threshold at 344. 
-- Second run: all three cases including 32x32 were 0. This does not seem to be well-defined behavior and indicates to me that the model generated code that broke the tester. 
-- Third run: After some troubleshooting to deal with the previous run, this was the first iteration of the code to generate output that yielded 288 runs. This unfortunately came at the cost of breaking one of the other cases in code. 
+- Second run: all three cases including _32x32_ were 0. This does not seem to be well-defined behavior and indicates that the model potentially generated code that broke the tester. 
+- Third run: After some troubleshooting to deal with the previous run, this was the first iteration of the code to generate output that yielded *_288_* runs. This unfortunately came at the cost of breaking one of the other cases in code. 
 
-In addition to succeeding with the 32x32 case, the secondary goal was to remedy issues that were occurring with the final test case of 61x67. Despite instruction to maintain the previously working case, some issues still managed to arise. This leads me to believe that there were some side effects as the result of the "properly working" 64x64 code that went under the miss rate.
+In addition to succeeding with the _32x32_ case, the secondary goal was to remedy issues that were occurring with the final test case of _61x67_. Despite instruction to maintain the previously working case, some issues still managed to arise. This suggests that there were some side effects as the result of the "properly working" _64x64_ code that went under the miss rate.
 
-The winning strategy for this case ended up being pretty simple, employing 8x8 blocking and solving each block individually with the naive method. With less data to handle at each step, less cache misses were recorded.
+The winning strategy for this case ended up being pretty simple, employing _8x8_ blocking and solving each block individually with the naive method. With less data to handle at each step, less cache misses were recorded.
 
 ==== _64x64_
 This code followed a bit of a different story. The development that this code took leads me to believe that there may be some side effects with some of the variables being used, since I am not fully sure what else could be happening. (the model maintained the same structure and order in the code as it did previously). 
