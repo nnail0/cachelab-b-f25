@@ -284,7 +284,7 @@ On the topic of convlusion, the genAI solutions have the perk of having the same
 
 This topic naturally leads into discussing the second point: understanding why the code works. We are able to see the general mechanics of the genAI code functionality as specified in comments. A drawback, nevertheless, is in missing why this code works. 
 
-When discussing the human code development process, and walking through all failures, we can see the exact train of thought that led to the final solution, starting with the most basic algorithm to the best. This is exactly what we miss in ChatGPT code. There has to be further prompting in order to get the explanation of why exactly this works. Even then, there has to be an element of wariness when reading the explanation due to the potential hallucinations of the black-box. The human instead has an explanation that can be built up from failures and data to support the next step justification, making the process more understandable at a deeper level. Additionally, the process can be read by others to improve upon, since others may see some sort of successful alternate approach from the development process that the original developer did not recognize. In all, the end answer is not always the only useful piece of the solution process.
+When discussing the human code development process, and walking through all failures, we can see the exact train of thought that led to the final solution, starting with the most basic algorithm to the best. This is exactly what we miss in ChatGPT code. There has to be further prompting in order to get the explanation of why exactly this works. Even then, there has to be an element of wariness when reading the explanation due to the potential hallucinations of the black-box. The human instead has an explanation that can be built up from failures, learning, and data to support the next step justification, making the process more understandable at a deeper level to both developer and reader. Additionally, the process can be read by others to improve upon, since others may see some sort of successful alternate approach from the development process that the original developer did not recognize. In all, the end answer is not always the only useful piece of the solution process.
 
 ==== Methodical Development
 
@@ -294,11 +294,23 @@ Naturally, the human code was generated starting with the perceived simplest mat
 
 Finally, as easy as it is to cast stones at genAI for having unpredictable side-effects and breaking its own code, there were admittedly many times that the human code did the same thing while testing functionality. Typically nothing was being broken outside of a specific method, but the potential for mistakes in complicated solution implementation was very high during human development. So, with more focused prompting, genAI shaves much of that headache successfully.
 
-
-
 == Conclusion
 
+To put all pieces together, human and genAI code came in quite close in performance, either being exactly the same in performance or one ever slightly beating the other. However, both approaches to the problem resulted in a solution under the desired boundary. So finally, we must ask: which approach is better?
+
+The term "better" here can have different meanings, and it depends on the goal of the exercise. As we have seen, genAI can produce a solution in a few moments that is better than one that took a human days to develop from scratch. From a perspective on time saving, genAI is absolutely a tool that should be utilized to this end. As long as the tool is used appropriately and consciously, such as prompting in small pieces to not overwhelm the model into clashing with itself and being aware of unpredictability, this can be an incredible starting point for solving a problem, or improving upon a decent solution. 
+
+But the term "better" can also mean the process of learning how to think in terms of the problem: to learn the intricacies and nuances of caches, how to use knowledge of the cache to improve upon failures, and to truly understand how to work within these confines. Although genAI can a quick, perfectly acceptable answer, the learning process is often far stronger when compounded by failure--something that genAI takes out of the equation entirely.
+
+In conclusion, both approaches had their benefits and drawbacks. Depending on the goal in mind, it is up to personal reponsibility to identify the appropriate usage of this tool given the context.
 
 == Appendix
 
 === Documentation Details
+
+Some notes on formatting that are likely useful for the reader.
+
+- `trans_human.c`: All methods to yield results discussed in report, as formatted for enabling running of `./test-trans` and `driver.py`. The attempt numbers correspond to the order the attempt is discussed in the report. When running `./test-trans`, all of these attempts will run for the given size. Feel free to comment out the registration of any of these in `registerFunctions()`. `transpose_submit()` will run the best for each size case.
+- `ai_trans.c`:
+- `trans_human_results.csv`: Results as gathered from `./test-trans` functionality for each size, corresponding to function names in `trans_human.c`. Formatted in the order: size, function name, hits, misses, evictions.
+- `ai_trans_results.csv`:
