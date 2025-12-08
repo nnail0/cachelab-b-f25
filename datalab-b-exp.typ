@@ -161,39 +161,41 @@ In addition to succeeding with the _32x32_ case, the secondary goal was to remed
 The winning strategy for this case ended up being pretty simple, employing _8x8_ blocking and solving each block individually with the naive method. With less data to handle at each step, less cache misses were recorded.
 
 ==== _64x64_
-This code followed a bit of a different story. The development that this code took leads me to believe that there may be some side effects with some of the variables being used, since I am not fully sure what else could be happening. (the model maintained the same structure and order in the code as it did previously). 
-- First run: invalid result. This code iteration produced suboptimal yet valid 32x32 code and right-on-the-spot 61x67 code, which was strange. Taking a quick glance at the code, I was never fully able to determine the cause of this issue. 
-- Second run: Like with other versions, the code that was generated produced 0 misses, which is effectively impossible and indicates that some sort of issue occurred with this iteration. I prompted ChatGPT to revisit this code and ensure that the setup was being conducted properly. 
-- Third run: Like with the 32x32 case, the 64x64 code hit well under the miss target of 1300 and netted 1180 misses. This came at the cost of breaking the 61x67 test case. 
+This code followed a bit of a different story. The development that this code took further suggests that there may be some side effects with some of the variables being used, since we cannot currently provide a plausable explanation for what else could be happening; the model maintained the same structure and order in the code as it did previously, so some faults were unclear in source. 
+- First run: invalid result. This code iteration produced suboptimal yet valid _32x32_ code and right-on-the-spot _61x67_ code, which was strange. Taking a quick glance at the code, I was never fully able to determine the cause of the invalidity. 
+- Second run: Like with other versions, the code that was generated produced 0 misses, which is effectively impossible and indicates that some sort of issue occurred with this iteration. ChatGPT was then prompted to revisit this code and ensure that the setup was being conducted properly. 
+- Third run: Like with the _32x32_ case, the _64x64_ code hit well under the miss target of _1300_ and netted *_1180_* misses. This came at the cost of breaking the _61x67_ test case. 
 
-Runs beyond Run 2 were to try and get a round of code that would integrate the successes of these two cases with the first-run success of 61x67; this proved unsuccessful. 
+Runs beyond Run 2 were to try and get a round of code that would integrate the successes of these two cases with the first-run success of _61x67_; this proved unsuccessful. 
 
-The model's winning strategy proved to be somewhat successful, but after looking at what it took to hit the target miss rate in the human-generated code, this makes sense. From what I was able to understand of the code, it followed three major phases: 
-- Handled the first four rows of each 8x8 block in a standard fashion, starting from the top left. 
-- Switched to a different strategy that involved breaking it down into further 4x4 blocks and transposing them in a specific order. This seemed to handle two or three of the four 4x4 blocks that the the code partitioned off. This was the only section of code out of the three cases that used the eight extra variables alotted to it. 
-- Finished off the final 4x4 block with a more standard transpose techniques. 
+The model's winning strategy proved to be somewhat successful, but after looking at what it took to hit the target miss rate in the human-generated code, this makes sense. From what we can understand of the code, it followed three major phases: 
++ Handled the first four rows of each _8x8_ block in a standard fashion, starting from the top left. 
++ Switched to a different strategy that involved breaking it down into further _4x4_ blocks and transposing them in a specific order. This seemed to handle two or three of the four _4x4_ blocks that the the code partitioned off. This was the only section of code out of the three cases that used the eight extra variables alotted to it. 
++ Finished off the final _4x4_ block with a more standard transpose techniques. 
 
 
 ==== _61x67_
 This test case ended up being one of the simplest, with the best results happening with very few lines of code and with the fewest number of attempts. 
 
-First run - instantly met the miss rate criteria. This code managed to just squeeze under the miss rate of 2,000 at 1,993 misses with about 2 dozen lines of code. 
-Second run - like with all of the others, this was invalid due to issues with the code. 
-Third run - This was the first run to nail the other two cases, but this (somehow) came at breaking the 61x67 case despite explicitly prompting the model to keep the original working code. I have yet to see whether the reason that the code broke was due to actual changes in the code or due to side effects from previous runs. 
+- First run - instantly met the miss rate criteria. This code managed to just squeeze under the miss rate of _2000_ at *_1993_* misses with about 2 dozen lines of code. 
+- Second run - like with all of the others, this was invalid due to issues with the code. 
+- Third run - This was the first run to nail the other two cases, but this, somehow, came at breaking the _61x67_ case despite explicitly prompting the model to keep the original working code. We have yet to see whether the reason that the code broke was due to actual changes in the code or due to side effects from previous runs. 
 
-The winning strategy for the 61x67 case was fairly simple and adopted most of the code from the standard 8x8 blocking strategy. The main change involved extra checks on the outer loops (given the irregular size) to handle not writing too much or too little on either of the dimensions. The inner loops employed the naive implementation. 
+The winning strategy for the _61x67_ case was fairly simple and adopted most of the code from the standard _8x8_ blocking strategy. The main change involved extra checks on the outer loops (given the irregular size) to handle not writing too much or too little on either of the dimensions. The inner loops employed the naive implementation. 
 
-=== Second Attempt: Three Separate functions
-I had a feeling that there were some side effects occurring under the hood as a result of having all three cases in the same function. As a result, I prompted the model to make another attempt. This time, I gave it explicit directions to split the code into three separate cases. This ended up being the solution. 
+==== Second Attempt: Three Separate functions
+As mentioned, there was an intimation that there were some side effects occurring under the hood as a result of having all three cases in the same function. As a result, the model was prompted to make another attempt. This time, it was given explicit directions to split the code into three separate cases. This ended up being the solution. 
 
-Upon closer inspection, it appears that ChatGPT added in some corrections to the 32x32 code, which makes me wonder more about where exactly the problem was happening before. Regardless, it appears that the model was able to reflect on its own mistakes from a previous conversation and find what went wrong. This could point to the previously mentioned "short-term memory" issue that I was mentioning earlier, or it could be something different. 
+Upon closer inspection, it appears that ChatGPT added in some corrections to the _32x32_ code, which makes begs more questions about where exactly the problem was happening before. Regardless, it appears that the model was able to reflect on its own mistakes from a previous conversation and find what went wrong. This could point to the previously mentioned "short-term memory" issues that that were mentioned earlier, or it could be something different. 
 
-=== Code Quality
-Some important aspects in measuring code quality involve legibility, conciseness, and correctness. In all, it looks like the model was able to produce code that I could mostly follow. 
-For the 64x64 case, the code was not terribly concise, which made it difficult to parse. However, it was able to generate a satisfactory result. The other cases could be distilled down to simple code that did not require any lines. This made it concise and easy to follow. 
-Lastly, correctness seem to be hit or miss. I was not able to get all three of the individual cases to cooperate with each other in the same function (begging the question about if registering three different functions would have been better). However, over three iterations, I was eventually able to get individual cases for all three. 
+==== Code Quality
+Some important aspects in measuring code quality involve legibility, conciseness, and correctness. In all, it looks like the model was able to produce code that that was mostly followable. 
 
-In addition to these main three cases, other basic conventions were followed. I was able to understand the readability and structure and the motivations behind implementing them. 
+For the _64x64_ case, the code was not terribly concise, which made it difficult to parse. However, it was able to generate a satisfactory result. The other cases could be distilled down to simple code that did not require any lines. This made it concise and easy to follow. 
+
+Lastly, correctness seem to be hit or miss. We were not able to get all three of the individual cases to cooperate with each other in the same function, begging the question about if registering three different functions would have been better. However, over three iterations, we were eventually able to get individual cases for all three. 
+
+In addition to these main three cases, other basic conventions were followed. The code itself was readable and structurally legible, and the motivations behind implementing them were comprehendible. 
 
 *nathan note*: elaborate more on the comparison between human and genAI code, strengths and weaknesses, 
 - create csv with the results. 
