@@ -12,7 +12,7 @@ In this new era of technology, computer science cannot be discussed without a sa
 
 In this report, we will dive into a straightforward operation with a caveat. Solutions to the given problem must be generated through the old-fashioned way, so to speak. However, we open the door as well to generating solutions with the exciting new technology developed in recent years. 
 
-With this experiment, we hope to explore the idea that genAI can be used in a successful direction to cut through a lot of the development time needed for a purely human-generated solution. It does, hwoever, come at the cost of losing understanding in the process itself which can be beneficial in learning how to build solutions generally--ones which AI may not always be able to predictably build for us. 
+With this experiment, we hope to explore the idea that genAI can be used in a successful direction to cut through a lot of the development time needed for a purely human-generated solution. It does, importantly, come at the cost of losing understanding in the process itself which can be beneficial in learning how to build solutions generally--ones which AI may not always be able to predictably build for us. 
 
 == Introduction and Motivation
 
@@ -276,11 +276,11 @@ However, that is not to say that genAI did not have it's uses here. The solution
 
 ==== Understandibility
 
-We nevertheless must discuss understandibility in two contexts: (1) Understanding the code itself and (2) understanding why the code works.
+We nevertheless must discuss understandibility in two contexts: (1) Understanding the code itself in terms of legibility and conciseness and (2) understanding why the code works.
 
-On understanding the code from a technical perspective, the human code submitted has the benefit of the comments being as verbose as needed--as much for the developer as for the reader. Considering at least the _64x64_ is an admittedly long and somewhat convoluted solution for the human code, these comments are necessary to even begin to piece together what we are doing mechanically. 
+On first understanding the code from a technical perspective, the human code submitted has the benefit of the comments being as verbose as needed--as much for the developer as for the reader. Considering at least the _64x64_ is an admittedly long and somewhat convoluted solution for the human code, these comments are necessary to even begin to piece together what we are doing mechanically. 
 
-On the topic of convlusion, the genAI solutions have the perk of having the same or less number lines overall. This is a huge improvement over the human code specifically for the _64x64_, which comes into about _133_ lines, as opposed to the _70_ line solution from ChatGPT that even performed better than the human solution. Generally, the shorter solution is easier to digest, along with straightforward commenting to interpret the intention of the code. 
+On the topic of convlusion, the genAI solutions have the opposing perk of having the same or less number lines overall. This is a huge improvement over the human code as most notable in the _64x64_ solution, which comes into about _133_ lines, as opposed to the _70_ line solution from ChatGPT that even performed better than the human solution. Generally, the shorter solution is easier to digest, along with straightforward commenting to interpret the intention of the code. 
 
 This topic naturally leads into discussing the second point: understanding why the code works. We are able to see the general mechanics of the genAI code functionality as specified in comments. A drawback, nevertheless, is in missing why this code works. 
 
