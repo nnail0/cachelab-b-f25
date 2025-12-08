@@ -1,3 +1,15 @@
+/*********
+ * Roxanne Lutz, Nathan Nail
+ * CS 341L Fall 2025
+ * 
+ * trans-human.c: human attempts, along with
+ * final successes, to minimize cache misses for 
+ * specified sizes. 
+ * 
+ * all code generated without use of genAI.
+ * 
+ */
+
 /* 
  * trans.c - Matrix transpose B = A^T
  *
