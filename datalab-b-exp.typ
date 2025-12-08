@@ -38,13 +38,9 @@ The following section goes into depth on the processes of generating solutions, 
 
 === Human
 
-
-==== Code Generation
 The following discussion of code generation will be presented from worst attempt to best attempt (or, the final submission that accomplishes a miss count under the minimum bound for each matrix). It should be noted that the attempts were not necessarily in a purely successful order, but will be presented as such for clarity.
 
 The subsections as follows are the order, as mentioned, the human code was generated in overall. They will include, in context, a discussion of attempts made, what was learned from the failure of the attempt, leading to how the final optimized function was created.
-
-Then, there will be a brief discussion of the process itself, along with any difficulties in generating ideas, collecting data, or anything else worth noting.
 
 ===== _32x32_
 
@@ -104,9 +100,9 @@ So, the next attempt utilizes a convoluted loophole. We cannot modify the conten
 
 The idea is that we can handle the diagonals first as a special case. First, we place the contents of the A-diagonal-block into the _8x8_ block next to the B-diagonal block (for the first 7 diagonal blocks, place to the next right _8x8_, for the last, place in the next left _8x8_). This effectively copies the problematic overlapping-set values into sets that will be guaranteed to not overlap with the B-diagonal-block sets. Next, use the U-shape access pattern to fill the B-diagonal blocks as we did in the prior attempt, but instead fill from the temporary storage block next door. This idea is successful, dropping our tally to _1412_ misses. So, this idea was in the correct direction, but needed improvement.
 
-Instead of using the blocks next to each diagonal, we will instead use one consistent storage unit in B for the left half of diagonals, and then a different consistent unit for the right half of diagonals. The following choice of storage unit is somewhat arbitrary, but it has some specific benefits: use _rows 0 - 4, columns 48 - 63_ for the left half, and use _rows 60 - 63, columns 0 - 15_ for the right half. The benefit to choosing these spots and filling them with top _4_ and bottom _4_ rows from A-diagonal-blocks is that, past the initial miss on accessing these _8_ sets in B, we will hit every time after as we fill in each iteration from A. These spots in B, further, will not self-thrash when filling B due to them being to the left/right of each other and not above/below. Even better, we can access A row-wise when filling these storage areas, avoiding all except 4 initial misses and 4 self-thrashes. The same holds for B: we can now fill the B-diagonal-blocks row-wise with the needed corresponding values from the B storage units, minimizing to _4_ initial misses and _4_ self-thrashes in the diagonals. Despite being arbitrarily chosen, we can depend upon these spots for the left/right halves of the matrix to procedurally conduct these diagonal transpositions in a convoluted, but cache-optimized fashion. Then, we continue the general case U-shaped access pattern for all other _8x8_ blocks in the matrix as we did before. Although the implementation of this is far more difficult than the simplicity of `trans`, we finally get below the bound using this technique, arriving at *_1268_* misses.
+Instead of using the blocks next to each diagonal, we will instead use one consistent storage unit in B for the left half of diagonals, and then a different consistent unit for the right half of diagonals. The following choice of storage unit is somewhat arbitrary, but it has some specific benefits: use _rows 0 - 4, columns 48 - 63_ for the left half, and use _rows 60 - 63, columns 0 - 15_ for the right half. The benefit to choosing these spots and filling them with top _4_ and bottom _4_ rows from A-diagonal-blocks is that, past the initial miss on accessing these _8_ sets in B, we will hit every time after as we fill in each iteration from A. These spots in B, further, will not self-thrash when filling B due to them being to the left/right of each other and not above/below. Even better, we can access A row-wise when filling these storage areas, avoiding all except _4_ initial misses and _4_ self-thrashes. The same holds for B: we can now fill the B-diagonal-blocks row-wise with the needed corresponding values from the B storage units, minimizing to _4_ initial misses and _4_ self-thrashes in the diagonals. Despite being arbitrarily chosen, we can depend upon these spots for the left/right halves of the matrix to procedurally conduct these diagonal transpositions in a convoluted, but cache-optimized fashion. Then, we continue the general case U-shaped access pattern for all other _8x8_ blocks in the matrix as we did before. Although the implementation of this is far more difficult than the simplicity of `trans`, we finally get below the bound using this technique, arriving at *_1268_* misses.
 
-Note that all code for these attempts can be found in `trans-human.c`. It will be kept there due to length of the functions.
+Note that all code for these attempts can be found in `trans-human.c`. It will be kept there due to length of the functions, since even snippets of that code are many lines in length.
 
 ===== _61x67_
 
@@ -132,15 +128,6 @@ for (j = 0; j < M; j += blocksize) { // swapped outer loops to move B blocks row
 ```
 
 this effectively move the B storage blocks left-right row-wise and A access blocks up-down column-wise. This succeeds in getting the misses below the bound, coming in at a final *_1914_* misses. 
-
-==== Discussion
-_Notes for roxanne_
-+ maybe talk about how long it took to get these ideas?
-+ discuss the time taken to consider the set overlays-this was the key way to generate a successful solution; include pngs aside to report? ask soraya
-+ unsureness of where to start--initial shooting in dark?
-+ discuss benefit of deep understanding gotten from the process of failure despite frustration 
-
-Surprisingly, the square matrices ended up being the most complicated to analyze, whereas the rectangular size ended up being simpler to optimize toward the goal, especially since it did not have the same horrendous diagonal overlap thrashing. However, it still has a far higher miss rate than the other matrices, making it still far less efficient in terms of cache usage.
 
 === GenAI
 
@@ -217,6 +204,15 @@ In addition to these main three cases, other basic conventions were followed. I 
 
 == Exploratory Analysis and Discussion 
 
+
+==== Discussion
+_Notes for roxanne_
++ maybe talk about how long it took to get these ideas?
++ discuss the time taken to consider the set overlays-this was the key way to generate a successful solution; include pngs aside to report? ask soraya
++ unsureness of where to start--initial shooting in dark?
++ discuss benefit of deep understanding gotten from the process of failure despite frustration 
+
+Surprisingly, the square matrices ended up being the most complicated to analyze, whereas the rectangular size ended up being simpler to optimize toward the goal, especially since it did not have the same horrendous diagonal overlap thrashing. However, it still has a far higher miss rate than the other matrices, making it still far less efficient in terms of cache usage.
 
 == Conclusion
 
