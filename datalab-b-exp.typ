@@ -247,21 +247,29 @@ The main differences in human and genAI code appear to lie primarily in
 
 ==== Time
 
+Overall the human generated solutions took around a week to develop to their current best miss rates. A bulk of this time was purely in initially beginning by toying around with code without any real intelligent goals in mind. This provided enough failure to start actually attempting the optimization in a way that was based on the set layout knowledge (as mentioned, hand drawing the patterns or using Excel sheets to create set color fills was very helpful). Then, the building of each attempt, which was built upon the prior failure, involved at times complex implementation details that had to be tested for correctness locally, only to be then tested for miss rate data.
+
+All of this together, culminating to a week's worth of frustration, did however come together into a deeper undestanding of the cache mechanisms and a layer of creative problem solving in this context that is a worthwhile skill for real-world applications. 
+
+However, that is not to say that genAI did not have it's uses here. The solutions that genAI, in spite of strange behavior in the initial prompts, took only a day to piece together. In terms of a real-life consequence, a workplace would likely perfer the inclusion of this tool to see if it can cut down the time taken on coming up with a solution to save the most important asset: money. Using this tool can be tremendously useful, then, freeing up time spent on the grunt work and providing a usable solution. This approach could be used postively to generate one or more optimized solutions on which to step in an improve as needed, cutting through the time to develop those initial failures to better focus on a final fine-tuned solution.
 
 ==== Understandibility
+
+We nevertheless must discuss understandibility in two contexts: (1) Understanding the code itself and (2) understanding why the code works.
+
+On understanding the code from a technical perspective, the human code submitted has the benefit of the comments being as verbose as needed--as much for the developer as for the reader. Considering at least the _64x64_ is an admittedly long and somewhat convoluted solution for the human code, these comments are necessary to even begin to piece together what we are doing mechanically. 
+
+On the topic of convlusion, the genAI solutions have the perk of having the same or less number lines overall. This is a huge improvement over the human code specifically for the _64x64_, which comes into about _133_ lines, as opposed to the _70_ line solution from ChatGPT that even performed better than the human solution. 
+
+
+
 
 
 ==== Methodical Development
 
-
-
-_Notes for roxanne_
-+ maybe talk about how long it took to get these ideas?
-+ discuss the time taken to consider the set overlays-this was the key way to generate a successful solution; include pngs aside to report? ask soraya
-+ unsureness of where to start--initial shooting in dark?
-+ discuss benefit of deep understanding gotten from the process of failure despite frustration 
-
+----------------------------------------------------
 Surprisingly, the square matrices ended up being the most complicated to analyze, whereas the rectangular size ended up being simpler to optimize toward the goal, especially since it did not have the same horrendous diagonal overlap thrashing. However, it still has a far higher miss rate than the other matrices, making it still far less efficient in terms of cache usage.
+----------------------------------------------
 
 === Potential Improvements
 
