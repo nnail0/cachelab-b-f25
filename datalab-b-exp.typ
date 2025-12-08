@@ -8,10 +8,24 @@
 
 == Summary
 
+In this new era of technology, computer science cannot be discussed without a same-breath mention of AI. The technology is officially out of the box and can never be put back in. We would be remiss to ignore it. So, how exactly does it fit into the field and learning processes in general?
+
+In this report, we will dive into a straightforward operation with a caveat. Solutions to the given problem must be generated through the old-fashioned way, so to speak. However, we open the door as well to generating solutions with the exciting new technology developed in recent years. 
+
+With this experiment, we hope to explore the idea that genAI can be used in a successful direction to cut through a lot of the development time needed for a purely human-generated solution. It does, hwoever, come at the cost of losing understanding in the process itself which can be beneficial in learning how to build solutions generally--ones which AI may not always be able to predictably build for us. 
 
 == Introduction and Motivation
 
+The assigned experiment focused on in this report is as follows.
 
+*Optimize with and without genAI tools the trasposition of a matrix for 3 specific matrix sizes (_32x32_, _64x64_, and _61x67_) for a direct-access cache that has 32 sets and 32 bytes held per line.*
+
+Primarily, the goal, in a tangible sense is to get both methods to reach under a specified boundary:
+- _32x32_: misses < 300
+- _64x64_: misses < 1300
+- _61x67_: misses < 2000
+
+The overarching motivating factor of the work done in this experiment is to highlight the strengths and weaknesses of both approaches to the problem. On one side, we will explore the lengthy process to develop code to meet this goal entirely from scratch without the benefit of genAI assistance. Likewise, we will dive into the idealistic code generation with genAI, discussing its benefits and drawbacks alike. With all pieces together, we will end by discussing the main differences in the approaches to the problem, focusing on the key takeaways from our results.
 
 This report is organized into 5 sections beyond this Introduction.
 + Methods: General summary of methods used to generate both human and genAI code for transposition.
@@ -26,7 +40,7 @@ This project was primarily split into two natural halves between the two partner
 + One person's focus was upon, entirely from scratch, approaching the optimization by hand.
 + The other person's focus was on the generation of solutions with generative AI. 
 
-The following parts are the methodolgies used in generating potential solutions.
+The following parts are the methodologies used in generating potential solutions. To analyze the solutions, we will be using the provided cache simulation code to gather miss rate data to better compare and build up approches.
 
 === Human
 The human generated code was developed in the following order:
