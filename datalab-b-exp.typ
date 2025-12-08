@@ -48,17 +48,41 @@ Then, there will be a brief discussion of the process itself, along with any dif
 
 ===== _32x32_
 
-As with all of the attempts made, the initial _32x32_ baseline miss rate was found through the simple trans function given. At worst, the number of misses was 1184. A far-cry from where the miss bound needed to be at < 300, there was some exploring to be done on how the sets of the cache laid.
+As with all of the attempts made, the initial _32x32_ baseline miss rate was found through the simple `trans` function given. At worst, the number of misses was _1184_. A far-cry from where the miss bound needed to be at _< 300_, there was some exploring to be done on how the sets of the cache laid.
 
-There are some pieces of key mathematics needed to understand how the sets of this direct-access cache lay and how we can best use it. With the numbers given, as discussed, we have 32 sets, and each set can hold 32 bytes, which will end up holding 8 ints in a set.
+There are some pieces of key mathematics needed to understand how the sets of this direct-access cache lay and how we could best use it. With the numbers given, as discussed, we have _$S = 2^5 = 32$_ sets, and each set can hold _32 bytes_ (again, _$B = 2^5 = 32$_). So, we will end up holding _8 ints_ in a set, since
 
-For the _32x32_, we can see a couple key patterns. First, the sets exactly fit within the dimensions, the first row being sets 0 - 3, next row being sets 4 - 7, and on. Further, the sets repeat their row overlay every 8 rows. 
+#set align(center)
+
+_(8 ints) \* (4 bytes per int) = 32 bytes to a line/set_
+
+#set align(left)
+
+For the _32x32_, we can see a couple key patterns. First, the sets exactly fit within the dimensions, the first row being sets _0 - 3_, next row being sets _4 - 7_, and on. Further, the sets repeat their row overlay every _8 rows_. 
  
-Therefore, when we are transposing, if we store a value in B and access in A, it is in the best interest in that cache to stay within those sets as much as possible. So, the first attempt past a baseline transposition attempts to make use of this fact and conduct a straightforward transpose procedure but within 8x8 blocks at a time. By staying within these 8x8 blocks, we can make use of the 8 int values loaded into the cache lines as much as possible before moving on to the next 8x8 blocks. 
+Therefore, when transposing, if we store a value in B and access in A, it is in the best interest in that cache to stay within those sets as much as possible. So, the first attempt past a baseline transposition attempts to make use of this fact and conducts a straightforward transpose procedure but within _8x8_ blocks. By staying within these _8x8_ blocks, we can make use of the _8 int_ values loaded into the cache lines as much as possible before moving on to the next _8x8_ blocks. 
 
-This attempt drops the miss rate significantly, only having 344 misses. From there, we need to analyze where the worst of the misses occur. We can see, by assuming and then verifying empirically by the cache simulation addresses, that A and B can be treated as contiguous in memory. The significance of this is that the sets of the cache overlap in the current access pattern specifically at the diagonal blocks (rows/columns 0 - 7, 8 - 15, …, 24 - 31). When we transpose these specific 8x8 blocks, accessing A and storing in B, we are thrashing the sets heavily due to this overlap.
+This attempt drops the miss rate significantly, only having _344_ misses. From there, we need to analyze where the worst of the misses occur. We can see, by verification through trace files, that A and B can be treated as contiguous in memory. The use of this is that the sets of the cache overlap in the current access pattern specifically at the diagonal blocks (_rows/columns 0 - 7, 8 - 15, …, 24 - 31_). When we transpose these specific _8x8_ blocks, accessing A and storing in B, we are thrashing the sets heavily due to this overlap.
 
-So, one way to address this is to load things preemptively, and allow one matrix full control, so to speak, over a set until it is ready to relinquish control to the other. To accomplish this, we will load a diagonal value of A into a temporary variable (for example, temp = A[0][0]). This allows A to claim control over the set overlaying this small block row (A[0] allows A control over set 0, following our example). Then, we allow B to have control over all the other sets, setting all values of B except for the diagonal (avoid B[0][0], set B[1..7][0] = A[0][1..7]). This allows A to hit on all accesses in this iteration past the initial access. Then, when we are done allowing A to have control of a set, we hand over control to B, storing the temporary value grabbed at the beginning into the appropriate diagonal slot (B[0][0] = temp). With this attempt at careful control hand-off between sets on the diagonal blocks, we manage to plummet the miss rate below our boundary: 288 misses.
+So, one way to address this is to load things preemptively, and allow one matrix full control, so to speak, over a set until it is ready to relinquish control to the other. To accomplish this, we will load a diagonal value of A into a temporary variable (for example, `temp = A[0][0]`). This allows A to claim control over the set overlaying this small block row (`A[0]` allows A control over _set 0_, following our example). Then, we allow B to have control over all the other sets, setting all values of B except for the diagonal (avoid `B[0][0]`, set `B[1..7][0] = A[0][1..7]`). This allows A to hit on all accesses in this iteration past the initial access. Then, when we are done allowing A to have control of a set, we hand over control to B, storing the temporary value grabbed at the beginning into the appropriate diagonal slot (`B[0][0] = temp`). 
+
+We can add the following code as a special-case to our _8x8_ blocking technique.
+
+```
+if (i == j) { // if we're in a "diagonal block"
+  for (ii = i; ii < i + blocksize; ii++) {
+      temp = A[ii][ii]; // give A control over the row
+      for (jj = j; jj < j + blocksize; jj++) {
+          if (jj != ii) { // skip over all cols of B that will thrash A's row control
+              B[jj][ii] = A[ii][jj];
+          } // end if
+      } // end loop
+      B[ii][ii] = temp; // give B control over this set by ending with a diagonal set
+  } // end loop
+}
+```
+
+With this careful management of thrashing, we manage to plummet the miss rate below our boundary: *_288_* misses.
 
 ===== _64x64_
 
