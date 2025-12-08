@@ -31,7 +31,7 @@ The most useful approach to each of these problems was developed by the approach
 === GenAI
 The genAI code was developed with ChatGPT 5 mini (with reasoning), which is the version of ChatGPT offered on a trial basis to those who have an OpenAI account but do not pay for any other tier. The model opted to approach the code in a rather monolothic manner and generated code for all three cases to put into one function. 
 
-When provided with code from the model, I replaced whatever code was already in the `transpose-submit` function and performed a direct replacement of all of the code, even if 1 or 2 out of the three ended up correct during the previous iteration. This was likely a suboptimal approach, but it demonstrates the deficiencies of ChatGPT's "memory". It likely would have been beneficial to split up the code generation into three different chunks to allow the model to analyze each case separately. The results of this method will be discussed later in the report. 
+When provided with code from the model, the code that was already in the `transpose-submit` function was directly and fully replaced, even if 1 or 2 out of the three ended up correct during the previous iteration. This was likely a suboptimal approach, but it demonstrates the deficiencies of ChatGPT's "memory". It likely would have been beneficial to split up the code generation into three different chunks to allow the model to analyze each case separately. The results of this method will be discussed later in the report. 
 
 == Data Collection
 The following section goes into depth on the processes of generating solutions, both human and genAI alike. 
