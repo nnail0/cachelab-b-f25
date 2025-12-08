@@ -1,24 +1,19 @@
-/*********
- * Roxanne Lutz, Nathan Nail
- * CS 341L Fall 2025
- * 
- * 
- * trans-human.c: transpose implemented independently. 
- * 
+/* 
+ * trans.c - Matrix transpose B = A^T
+ *
  * Each transpose function must have a prototype of the form:
  * void trans(int M, int N, int A[N][M], int B[M][N]);
  *
  * A transpose function is evaluated by counting the number of misses
- * on a 1KB direct mapped cache with a block size of 32 bytes. 
- */
-
+ * on a 1KB direct mapped cache with a block size of 32 bytes.
+ */ 
 #include <stdio.h>
 #include "cachelab.h"
 
 int is_transpose(int M, int N, int A[N][M], int B[M][N]);
 void trans(int M, int N, int A[N][M], int B[M][N]);
-void best_32(int M, int N, int A[N][M], int B[M][N]);
-void best_64(int M, int N, int A[N][M], int B[M][N]);
+void best_32_32(int M, int N, int A[N][M], int B[M][N]);
+void best_64_64(int M, int N, int A[N][M], int B[M][N]);
 void best_61_67(int M, int N, int A[N][M], int B[M][N]);
 /* 
  * transpose_submit - This is the solution transpose function that you
@@ -31,9 +26,9 @@ char transpose_submit_desc[] = "Transpose submission";
 void transpose_submit(int M, int N, int A[N][M], int B[M][N])
 {
   if (M == 32 && N == 32) { // optimized 32x32 output size
-    best_32(M, N, A, B);
+    best_32_32(M, N, A, B);
   } else if (M == 64 && N == 64) { // optimized 64x64 output size
-    best_64(M, N, A, B);
+    best_64_64(M, N, A, B);
   } else if (M == 61 && N == 67) { // optimized 61x67 output size
     best_61_67(M, N, A, B);
   } else { // given anything else, no optimization built.
@@ -80,8 +75,8 @@ void trans(int M, int N, int A[N][M], int B[M][N])
  * ii == jj points until we're ready to relinquish the set 
  * to B's control.
  */
-char best_32_func[] = "Best For 32";
-void best_32(int M, int N, int A[N][M], int B[M][N]) {
+char best_32_32_func[] = "Best For 32x32";
+void best_32_32(int M, int N, int A[N][M], int B[M][N]) {
     int blocksize = 8;
     int i, j, ii, jj, temp;
     
@@ -129,8 +124,8 @@ void best_32(int M, int N, int A[N][M], int B[M][N]) {
  * will be filled by accessing A blocks in a sideways U shape which minimizes the misses
  * in the general-non-diagonal case well between A and B.
  */
-char best_64_func[] = "Best For 64";
-void best_64(int M, int N, int A[N][M], int B[M][N]) {
+char best_64_64_func[] = "Best For 64x64";
+void best_64_64(int M, int N, int A[N][M], int B[M][N]) {
 
  int blocksize = 4; 
  int double_blocksize = 8;
@@ -263,7 +258,7 @@ void best_64(int M, int N, int A[N][M], int B[M][N]) {
           } // end loop
         } // end loop
 
-      } // end loop
+      } // end if
     } // end loop
   } // end loop
 
@@ -302,6 +297,320 @@ void best_61_67(int M, int N, int A[N][M], int B[M][N]) {
 
 } // end 61x67 optimization
 
+/**
+ * ====================================================
+ * FAILED ATTEMPTS -- INCLUDED FOR REPORT
+ * 
+ * these are merely included to provide evidence and 
+ * numbers for failed attempts to assist in explaining 
+ * the process to get the successful attempt.
+ * ====================================================
+ */
+
+ /**
+  * ===============
+  * 32x32 ATTEMPTS
+  * ===============
+  */
+
+/**
+ * basic 8x8 blocking of the matrix.
+ */
+char attempt_1_32_32_func[] = "32x32, Attempt 1 - 8x8 Block, No Diag";
+void attempt_1_32_32(int M, int N, int A[N][M], int B[M][N]) {
+  int blocksize = 8; // attempt a blocksize of 8
+  int i, j, ii, jj;
+
+
+   for (i = 0; i < N; i += blocksize) { // row block increaser
+    for (j = 0; j < M; j += blocksize) { // col block increaser
+       
+        for (ii = i; ii < i + blocksize; ii++) { // fill the mini blocks
+            for (jj = j; jj < j + blocksize; jj++) {
+                B[jj][ii] = A[ii][jj];
+            } // end loop
+        } // end loop
+    } // end loop
+  } // end loop
+} // end attempt
+
+
+ /**
+  * ===============
+  * 64x64 ATTEMPTS
+  * ===============
+  */
+
+/**
+ * basic 64x64 8x8 blocking to see how it behaves
+ */
+char attempt_1_64_64_func[] = "64x64, Attempt 1 - 8x8 Block, No Diag";
+void attempt_1_64_64(int M, int N, int A[N][M], int B[M][N]) {
+  int blocksize = 8; // attempt a blocksize of 8
+  int i, j, ii, jj;
+
+   for (i = 0; i < N; i += blocksize) { // row block increaser
+    for (j = 0; j < M; j += blocksize) { // col block increaser
+       
+        for (ii = i; ii < i + blocksize; ii++) { // fill the mini blocks
+            for (jj = j; jj < j + blocksize; jj++) {
+                B[jj][ii] = A[ii][jj];
+            } // end loop
+        } // end loop
+    } // end loop
+  } // end loop
+} // end attempt 
+
+/**
+ * basic 64x64 4x4 blocking to see how it behaves
+ */
+char attempt_2_64_64_func[] = "64x64, Attempt 2 - 4x4 Block, No Diag";
+void attempt_2_64_64(int M, int N, int A[N][M], int B[M][N]) {
+  int blocksize = 4; // attempt a blocksize of 8
+  int i, j, ii, jj;
+
+   for (i = 0; i < N; i += blocksize) { // row block increaser
+    for (j = 0; j < M; j += blocksize) { // col block increaser
+       
+        for (ii = i; ii < i + blocksize; ii++) { // fill the mini blocks
+            for (jj = j; jj < j + blocksize; jj++) {
+                B[jj][ii] = A[ii][jj];
+            } // end loop
+        } // end loop
+    } // end loop
+  } // end loop
+} // end attempt 
+
+
+/**
+ * basic 64x64 4x4 blocking with a sideways U
+ * general case access pattern
+ */
+char attempt_3_64_64_func[] = "64x64, Attempt 3 - 4x4 Block, No Diag, U Access";
+void attempt_3_64_64(int M, int N, int A[N][M], int B[M][N]) {
+  int blocksize = 4; // attempt a blocksize of 8
+  int double_blocksize = 8;
+  int i, j, ii, jj;
+  // access A in a sideways U pattern to fill with minimal misses generally.
+  for (i = 0; i < N; i += double_blocksize) { 
+    for (j = 0; j < M; j += double_blocksize) {
+
+      for (ii = i; ii < i + blocksize; ii++) { // upper left square
+        for (jj = j; jj < j + blocksize; jj++) {
+            B[jj][ii] = A[ii][jj];
+        } // end loop
+      } // end loop
+
+        for (ii = i; ii < i + blocksize; ii++) { // upper right square
+        for (jj = j + blocksize; jj < j + double_blocksize; jj++) {
+            B[jj][ii] = A[ii][jj];
+        } // end loop
+      } // end loop
+
+      
+      for (ii = i + blocksize; ii < i + double_blocksize; ii++) { // bottom right square
+        for (jj = j + blocksize; jj < j + double_blocksize; jj++) {
+            B[jj][ii] = A[ii][jj];
+        } // end loop
+      } // end loop
+      
+      for (ii = i + blocksize; ii < i + double_blocksize; ii++) { // bottom left square
+        for (jj = j; jj < j + blocksize; jj++) {
+            B[jj][ii] = A[ii][jj];
+        } // end loop
+      } // end loop
+
+    } // end loop
+  } // end loop
+ 
+} // end attempt 
+
+/**
+ * attempt made to test out the idea of placing 
+ * values from A into B and then using B as the fill
+ */
+char attempt_4_64_64_func[] = "64x64, Attempt 4 - 4x4 Block, First Attempt Diag Handling, U Access";
+void attempt_4_64_64(int M, int N, int A[N][M], int B[M][N]) {
+  int blocksize = 4; 
+  int double_blocksize = 8;
+  int i, j, ii, jj;
+
+  // attempt to avoid set clash by storing A vals next to destination diagonal in B
+  for (i = 0; i < N - double_blocksize; i += double_blocksize) {
+    for (ii = i; ii < i + double_blocksize; ii++){
+      for (jj = i; jj < i + double_blocksize; jj++) {
+        B[ii][jj + double_blocksize] = A[ii][jj];
+      } // end loop
+    } // end loop
+  } // end loop
+
+  // have to put the final diagonals to the left of the last one
+  for (ii = N - double_blocksize; ii < N; ii++) {
+    for (jj = N - double_blocksize; jj < N; jj++) {
+      B[ii][jj - double_blocksize] = A[ii][jj];
+    } // end loop
+  } // end loop
+
+  // now, let's fill the diagonals FROM B
+  // we're gonna fill as a sideways U shape starting in top left
+  for (i = 0, j = 0; i < N; i += double_blocksize, j += double_blocksize) {
+
+    if (i < M - double_blocksize) { // NOT the last row  
+      for (int ii = i; ii < i + blocksize; ii++) { // fill the upper left square
+        for (int jj = j; jj < j + blocksize; jj++) {
+            B[jj][ii] = B[ii][jj + double_blocksize];
+        } // end loop
+      } // end loop
+
+
+      for (int ii = i; ii < i + blocksize; ii++) { // fill the upper right square
+        for (int jj = j + blocksize; jj < j + double_blocksize; jj++) {
+            B[jj][ii] = B[ii][jj + double_blocksize];
+        } // end loop
+      } // end loop
+
+
+      for (int ii = i + blocksize; ii < i + double_blocksize; ii++) { // fill the bottom right square
+        for (int jj = j + blocksize; jj < j + double_blocksize; jj++) {
+            B[jj][ii] = B[ii][jj + double_blocksize];
+        } // end loop
+      } // end loop
+
+
+      for (int ii = i + blocksize; ii < i + double_blocksize; ii++) { // fill the bottom left square
+        for (int jj = j; jj < j + blocksize; jj++) {
+            B[jj][ii] = B[ii][jj + double_blocksize];
+        } // end loop
+      } // end loop
+    } else { // special case for last diag -- look left
+
+      for (int ii = i; ii < i + blocksize; ii++) { // fill the upper left square
+        for (int jj = j; jj < j + blocksize; jj++) {
+            B[jj][ii] = B[ii][jj - double_blocksize];
+        } // end loop
+      } // end loop
+
+
+      for (int ii = i; ii < i + blocksize; ii++) { // fill the upper right square
+        for (int jj = j + blocksize; jj < j + double_blocksize; jj++) {
+            B[jj][ii] = B[ii][jj - double_blocksize];
+        } // end loop
+      } // end loop
+
+
+      for (int ii = i + blocksize; ii < i + double_blocksize; ii++) { // fill the bottom right square
+        for (int jj = j + blocksize; jj < j + double_blocksize; jj++) {
+            B[jj][ii] = B[ii][jj - double_blocksize];
+        } // end loop
+      } // end loop
+
+
+      for (int ii = i + blocksize; ii < i + double_blocksize; ii++) { // fill the bottom left square
+        for (int jj = j; jj < j + blocksize; jj++) {
+            B[jj][ii] = B[ii][jj - double_blocksize];
+        } // end loop
+      } // end loop
+
+    } // end if
+  } // end loop
+
+
+  // access A in a sideways U pattern to fill with minimal misses generally.
+  for (i = 0; i < N; i += double_blocksize) { 
+    for (j = 0; j < M; j += double_blocksize) {
+
+      if (i != j) { // avoid diagonals
+        for (ii = i; ii < i + blocksize; ii++) { // upper left square
+          for (jj = j; jj < j + blocksize; jj++) {
+              B[jj][ii] = A[ii][jj];
+          } // end loop
+        } // end loop
+
+        for (ii = i; ii < i + blocksize; ii++) { // upper right square
+          for (jj = j + blocksize; jj < j + double_blocksize; jj++) {
+              B[jj][ii] = A[ii][jj];
+          } // end loop
+        } // end loop
+
+        
+        for (ii = i + blocksize; ii < i + double_blocksize; ii++) { // bottom right square
+          for (jj = j + blocksize; jj < j + double_blocksize; jj++) {
+              B[jj][ii] = A[ii][jj];
+          } // end loop
+        } // end loop
+        
+        for (ii = i + blocksize; ii < i + double_blocksize; ii++) { // bottom left square
+          for (jj = j; jj < j + blocksize; jj++) {
+              B[jj][ii] = A[ii][jj];
+          } // end loop
+        } // end loop
+      } // end if
+      
+    } // end loop
+  } // end loop
+ 
+} // end attempt 
+
+ /**
+  * ===============
+  * 61x67 ATTEMPTS
+  * ===============
+  */
+
+/**
+ * basic 4x4 blocking of the matrix.
+ */
+char attempt_1_61_67_func[] = "61x67, Attempt 1 - 4x4 Block, No Diag";
+void attempt_1_61_67(int M, int N, int A[N][M], int B[M][N]) {
+  int blocksize = 4; // attempt a blocksize of 4
+  int i, j, ii, jj;
+
+  for (i = 0; i < N; i += blocksize) {
+    for (j = 0; j < N; j += blocksize) {
+     
+      for (ii = i; ii < i + blocksize; ii++) {
+        for (jj = j; jj < j + blocksize; jj++) {
+          if (ii < N && jj < M) {
+            B[jj][ii] = A[ii][jj];
+          } // end if
+        } // end loop
+      } // end loop
+
+    } // end loop
+  } // end loop
+
+} // end attempt
+
+/**
+ * basic 8x8 blocking of the matrix.
+ */
+char attempt_2_61_67_func[] = "61x67, Attempt 2 - 8x8 Block, No Diag";
+void attempt_2_61_67(int M, int N, int A[N][M], int B[M][N]) {
+  int blocksize = 8; // attempt a blocksize of 4
+  int i, j, ii, jj;
+
+  for (i = 0; i < N; i += blocksize) {
+    for (j = 0; j < N; j += blocksize) {
+     
+      for (ii = i; ii < i + blocksize; ii++) {
+        for (jj = j; jj < j + blocksize; jj++) {
+          if (ii < N && jj < M) {
+            B[jj][ii] = A[ii][jj];
+          } // end if
+        } // end loop
+      } // end loop
+
+    } // end loop
+  } // end loop
+
+} // end attempt
+
+
+/**
+ * ====================================================
+ * GIVEN FUNCTIONS TO RUN TEST CASES
+ * ====================================================
+ */
 
 /*
  * registerFunctions - This function registers your transpose
@@ -317,9 +626,21 @@ void registerFunctions()
 
     /* Register any additional transpose functions */
     registerTransFunction(trans, trans_desc); // normal transpose
-    registerTransFunction(best_32, best_32_func); // best for 32x32
-    registerTransFunction(best_64, best_64_func); // best for 64x64
+    registerTransFunction(best_32_32, best_32_32_func); // best for 32x32
+    registerTransFunction(best_64_64, best_64_64_func); // best for 64x64
     registerTransFunction(best_61_67, best_61_67_func); // best for 61x67
+
+    // failed attempts, comment to disable these when running
+    registerTransFunction(attempt_1_32_32, attempt_1_32_32_func);
+
+    registerTransFunction(attempt_1_64_64, attempt_1_64_64_func);
+    registerTransFunction(attempt_2_64_64, attempt_2_64_64_func);
+    registerTransFunction(attempt_3_64_64, attempt_3_64_64_func);
+    registerTransFunction(attempt_4_64_64, attempt_4_64_64_func);
+
+    registerTransFunction(attempt_1_61_67, attempt_1_61_67_func);
+    registerTransFunction(attempt_2_61_67, attempt_2_61_67_func);
+    
 }
 
 /* 

@@ -40,9 +40,9 @@ The following section goes into depth on the processes of generating solutions, 
 
 
 ==== Code Generation
-The following discussion of code generation will be presented from worst attempt to best attempt (or, the final submission that accomplishes a miss cound under the minimum bound for each matrix). It should be noted that the attempts were not necessarily in a purely successful order, but will be presented as such for clarity.
+The following discussion of code generation will be presented from worst attempt to best attempt (or, the final submission that accomplishes a miss count under the minimum bound for each matrix). It should be noted that the attempts were not necessarily in a purely successful order, but will be presented as such for clarity.
 
-The subsections as follow are the order, as mentioned, the human code was generated on overall. They will include, in context, a discussion of attempts made, what was learned from the failure of the attempt, leading to how the final optimized function was created.
+The subsections as follows are the order, as mentioned, the human code was generated in overall. They will include, in context, a discussion of attempts made, what was learned from the failure of the attempt, leading to how the final optimized function was created.
 
 Then, there will be a brief discussion of the process itself, along with any difficulties in generating ideas, collecting data, or anything else worth noting.
 
