@@ -204,15 +204,6 @@ In addition to these main three cases, other basic conventions were followed. Th
 
 == Exploratory Analysis and Discussion 
 
-=== BULLSHIT DUMP
-_Notes for roxanne_
-+ maybe talk about how long it took to get these ideas?
-+ discuss the time taken to consider the set overlays-this was the key way to generate a successful solution; include pngs aside to report? ask soraya
-+ unsureness of where to start--initial shooting in dark?
-+ discuss benefit of deep understanding gotten from the process of failure despite frustration 
-
-Surprisingly, the square matrices ended up being the most complicated to analyze, whereas the rectangular size ended up being simpler to optimize toward the goal, especially since it did not have the same horrendous diagonal overlap thrashing. However, it still has a far higher miss rate than the other matrices, making it still far less efficient in terms of cache usage.
-
 === Results
 
 Overall, we were able to generate successful under-bound solutions both on the human and genAI side of code generation. Following is the comparsion of the best results from both sides.
@@ -239,10 +230,38 @@ Overall, we were able to generate successful under-bound solutions both on the h
 
 #set align(left)
 
+As we can see from the above, the _32x32_ best records met exactly. From the code generated on both ends, both human and genAI came to the same technique of using a temporary variable to store the diagonal value. Further, there were approximately the same number of attempts made to come to that conclusion between the two--human took 2 attempts beyond the `trans` function baseline, and genAI took until the 3rd prompting. 
 
+The _64x64_ is likely the most interesting to look at the differences of. From the human side, it was by far the most difficult to analyze, requiring much slow analysis of the set patterns and creativity in generating a solution. It also took the most failures of all the matrices, which meant days of attempts being concocted until the final success was met. 
 
+Even after all that, genAI was able to produce a better solutions by about _90_ misses. Further, it only took 3 attempts of prompting to get a valid, under the target bound solution, which is impressive compared to the pains it took to generate something without being able to use it.
+
+Finally, the _61x67_ was however beat by the human by about _80_ misses. The two methods used are slightly different in nature, as will be discussed below, but one strategy was clearly still slightly better than the other. However, given that both solutions are under the goal boundary, each are valid in terms of minimizing the misses.
 
 === Code Generation Comparisons
+
+The main differences in human and genAI code appear to lie primarily in 
++ Time taken to generate solutions.
++ Understandibility of the solution.
++ Ability to build up the solution methodically.
+
+==== Time
+
+
+==== Understandibility
+
+
+==== Methodical Development
+
+
+
+_Notes for roxanne_
++ maybe talk about how long it took to get these ideas?
++ discuss the time taken to consider the set overlays-this was the key way to generate a successful solution; include pngs aside to report? ask soraya
++ unsureness of where to start--initial shooting in dark?
++ discuss benefit of deep understanding gotten from the process of failure despite frustration 
+
+Surprisingly, the square matrices ended up being the most complicated to analyze, whereas the rectangular size ended up being simpler to optimize toward the goal, especially since it did not have the same horrendous diagonal overlap thrashing. However, it still has a far higher miss rate than the other matrices, making it still far less efficient in terms of cache usage.
 
 === Potential Improvements
 
