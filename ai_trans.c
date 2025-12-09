@@ -7,7 +7,7 @@
  * 
  * Model used: ChatGPT 5 mini (with intelligence)
  * 
- * 
+ * nnail0, rlutz1
  * 
  */
 

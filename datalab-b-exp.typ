@@ -311,6 +311,7 @@ In conclusion, both approaches had their benefits and drawbacks. Depending on th
 Some notes on formatting that are likely useful for the reader.
 
 - `trans_human.c`: All methods to yield results discussed in report, as formatted for enabling running of `./test-trans` and `driver.py`. The attempt numbers correspond to the order the attempt is discussed in the report. When running `./test-trans`, all of these attempts will run for the given size. Feel free to comment out the registration of any of these in `registerFunctions()`. `transpose_submit()` will run the best for each size case.
-- `ai_trans.c`:
+- `ai_trans.c`: The original `trans.c` file modified and filled in with output produced by ChatGPT. The code in this file is the most recent version containing three spearate function calls. 
+- `ai_trans_old.c`: This is an older version of the code that ChatGPT generated, where all three cases were handled inside of one function. Implementing the code in this manner led to issues, which necessitated a different approach. 
 - `trans_human_results.csv`: Results as gathered from `./test-trans` functionality for each size, corresponding to function names in `trans_human.c`. Formatted in the order: size, function name, hits, misses, evictions.
-- `ai_trans_results.csv`:
+- `ai_trans_results.csv`: Results gathered from running `driver.py` and formatted 
