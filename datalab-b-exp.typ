@@ -154,6 +154,8 @@ this effectively move the B storage blocks left-right row-wise and A access bloc
 
 *NOTE*: When returning to fill out information in the AI results CSV, the results differ than what were originally observed, likely due to a different copy-paste method (what code snippets I let ChatGPT generated vs. how much of it I actually copied over) employed that fixed issues with validity. The results in this document are what I actually observed, while the results in the CSV differ due to these "enhancements". This means that the code generated may have been more accurate and led to less invalid results than originally claimed. There was likely an element of human error involved here.
 
+*NOTE*: the prompts are _not_ organized by size given that ChatGPT opted to solve them in a more monolithic manner. I did not have time to reprompt the model to separate this out. Instead, two chat logs are included, one that includes the chat history for the all-cases-in-one-function style and another (with only one prompt) that separates it out into three functions. 
+
 For the genAI section of the code, ChatGPT 5 mini (with intelligence) was handed the entire PDF, in addition to some instructions provided to it: 
 
 #block(
