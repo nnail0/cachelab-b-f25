@@ -8,17 +8,17 @@
 
 == Summary
 
-In this new era of technology, computer science cannot be discussed without a same-breath mention of AI. The technology is officially out of the box and can never be put back in. We would be remiss to ignore it. So, how exactly does it fit into the field and learning processes in general?
+In this new era of technology, computer science cannot be discussed without mentioning AI in the same breath. The technology is officially out of the box and can never be put back in. We would therefore be remiss to ignore it. So, how exactly does it fit into the field and learning processes in general?
 
-In this report, we will dive into a straightforward operation with a caveat. Solutions to the given problem must be generated through the old-fashioned way, so to speak. However, we open the door as well to generating solutions with the exciting new technology developed in recent years. 
+In this report, we will dive into a straightforward operation with a caveat. Solutions to the given problem will be generated through the old-fashioned way, without exterior help. However, we open the door as well to generating solutions with the ground-breaking new technology developed in recent years. 
 
-With this experiment, we hope to explore the idea that genAI can be used in a successful direction to cut through a lot of the development time needed for a purely human-generated solution. It does, importantly, come at the cost of losing understanding in the process itself which can be beneficial in learning how to build solutions generally--ones which AI may not always be able to predictably build for us. 
+With this experiment, we hope to explore the idea that genAI can be used in a successful direction to cut through a lot of the development time needed for a purely human-generated solution. It does, importantly, come at the cost of losing understanding in the process itself which can be beneficial in learning how to build solutions--ones which AI may not always be able to predictably build for us. 
 
 == Introduction and Motivation
 
 The assigned experiment focused on in this report is as follows.
 
-*Optimize with and without genAI tools the trasposition of a matrix for 3 specific matrix sizes (_32x32_, _64x64_, and _61x67_) for a direct-access cache that has 32 sets and 32 bytes held per line.*
+*Optimize with and without genAI tools the transposition of a matrix for 3 specific matrix sizes (_32x32_, _64x64_, and _61x67_) for a direct-access cache that has 32 sets and 32 bytes held per line.*
 
 Primarily, the goal, in a tangible sense is to get both methods to reach under a specified boundary:
 - _32x32_: misses < 300
@@ -30,7 +30,9 @@ The overarching motivating factor of the work done in this experiment is to high
 This report is organized into 4 sections beyond this Introduction.
 + Methods: General summary of methods used to generate both human and genAI code for transposition.
 + Data Collection: In depth discussion of the process in which human code was created, including failues. Likewise, in depth discussion of prompting attempts with genAI to generate code with the same goal.
++ Results and Discussion: Discussion of results and primary differences in code approaches.
 + Conclusion: Concluding points of the report.
++ References: All references of use in this project.
 + Appendix: Brief inclusion of documentation details about documents included with submission
 
 == Methods
@@ -42,6 +44,7 @@ This project was primarily split into two natural halves between the two partner
 The following parts are the methodologies used in generating potential solutions. To analyze the solutions, we will be using the provided cache simulation code to gather miss rate data to better compare and build up approches.
 
 === Human
+
 The human generated code was developed in the following order:
 + _32x32_ optimization
 + _64x64_ optimization
@@ -50,11 +53,13 @@ The human generated code was developed in the following order:
 The most useful approach to each of these problems was developed by the approach to the first. Picture/color representations of the set overlays on the matrics were generated to a degree in which the problematic miss rate areas were visibly simple to identify. Then, as will be discussed in the data collection portion of this report, solutions to mitigate these miss rates were developed based upon successful changes.
 
 === GenAI
+
 The genAI code was developed with ChatGPT 5 mini (with reasoning), which is the version of ChatGPT offered on a trial basis to those who have an OpenAI account but do not pay for any other tier. The model opted to approach the code in a rather monolothic manner and generated code for all three cases to put into one function. 
 
 When provided with code from the model, the code that was already in the `transpose-submit` function was directly and fully replaced, even if 1 or 2 out of the three ended up correct during the previous iteration. This was likely a suboptimal approach, but it demonstrates the deficiencies of ChatGPT's "memory". It likely would have been beneficial to split up the code generation into three different chunks to allow the model to analyze each case separately. The results of this method will be discussed later in the report. 
 
 == Data Collection
+
 The following section goes into depth on the processes of generating solutions, both human and genAI alike. 
 
 === Human
@@ -152,9 +157,9 @@ this effectively move the B storage blocks left-right row-wise and A access bloc
 
 === GenAI
 
-*NOTE*: When returning to fill out information in the AI results CSV, the results differ than what were originally observed, likely due to a different copy-paste method (what code snippets I let ChatGPT generated vs. how much of it I actually copied over) employed that fixed issues with validity. The results in this document are what I actually observed, while the results in the CSV differ due to these "enhancements". This means that the code generated may have been more accurate and led to less invalid results than originally claimed. There was likely an element of human error involved here.
+*NOTE*: When returning to fill out information in the AI results CSV, the results differ than what were originally observed, likely due to a different copy-paste method (what code snippets ChatGPT generated vs. how much of it was actually copied over) employed that fixed issues with validity. The results in this document are what were actually observed, while the results in the CSV differ due to these "enhancements". This means that the code generated may have been more accurate and led to less invalid results than originally claimed. There was likely an element of human error involved here.
 
-*NOTE*: the prompts are _not_ organized by size given that ChatGPT opted to solve them in a more monolithic manner. I did not have time to reprompt the model to separate this out. Instead, two chat logs are included, one that includes the chat history for the all-cases-in-one-function style and another (with only one prompt) that separates it out into three functions. 
+*NOTE*: the prompts are _not_ organized by size given that ChatGPT opted to solve them in a more monolithic manner. There was not sufficient time to reprompt the model to separate this out. Instead, two chat logs are included, one that includes the chat history for the all-cases-in-one-function style and another (with only one prompt) that separates it out into three functions. 
 
 For the genAI section of the code, ChatGPT 5 mini (with intelligence) was handed the entire PDF, in addition to some instructions provided to it: 
 
@@ -196,7 +201,7 @@ The winning strategy for this case ended up being pretty simple, employing _8x8_
 
 ==== _64x64_
 This code followed a bit of a different story. The development that this code took further suggests that there may be some side effects with some of the variables being used, since we cannot currently provide a plausable explanation for what else could be happening; the model maintained the same structure and order in the code as it did previously, so some faults were unclear in source. 
-- First run: invalid result. This code iteration produced suboptimal yet valid _32x32_ code and right-on-the-spot _61x67_ code, which was strange. Taking a quick glance at the code, I was never fully able to determine the cause of the invalidity. 
+- First run: invalid result. This code iteration produced suboptimal yet valid _32x32_ code and right-on-the-spot _61x67_ code, which was strange. Taking a look at the code, the cause cause of the invalidity was never fully determined. 
 - Second run: Like with other versions, the code that was generated produced 0 misses, which is effectively impossible and indicates that some sort of issue occurred with this iteration. ChatGPT was then prompted to revisit this code and ensure that the setup was being conducted properly. 
 - Third run: Like with the _32x32_ case, the _64x64_ code hit well under the miss target of _1300_ and netted *_1180_* misses. This came at the cost of breaking the _61x67_ test case. 
 
@@ -222,7 +227,7 @@ As mentioned, there was an intimation that there were some side effects occurrin
 Upon closer inspection, it appears that ChatGPT added in some corrections to the _32x32_ code, which makes begs more questions about where exactly the problem was happening before. Regardless, it appears that the model was able to reflect on its own mistakes from a previous conversation and find what went wrong. This could point to the previously mentioned "short-term memory" issues that that were mentioned earlier, or it could be something different. 
 
 ==== Code Quality
-Some important aspects in measuring code quality involve legibility, conciseness, and correctness. In all, it looks like the model was able to produce code that that was mostly followable. 
+Some important aspects in measuring code quality involve legibility, conciseness, and correctness. In all, the model was able to produce code that that was mostly followable. 
 
 For the _64x64_ case, the code was not terribly concise, which made it difficult to parse. However, it was able to generate a satisfactory result. The other cases could be distilled down to simple code that did not require any lines. This made it concise and easy to follow. 
 
@@ -230,9 +235,9 @@ Lastly, correctness seem to be hit or miss. We were not able to get all three of
 
 In addition to these main three cases, other basic conventions were followed. The code itself was readable and structurally legible, and the motivations behind implementing them were comprehendible. 
 
-=== Results
+== Results and Discussion
 
-Overall, we were able to generate successful under-bound solutions both on the human and genAI side of code generation. Following is the comparsion of the best results from both sides.
+Overall, we were able to generate successful under-bound solutions both on the human and genAI side of code generation. Following is the comparison of the best results from both sides.
 
 #set align(center)
 
@@ -256,13 +261,13 @@ Overall, we were able to generate successful under-bound solutions both on the h
 
 #set align(left)
 
-As we can see from the above, the _32x32_ best records met exactly. From the code generated on both ends, both human and genAI came to the same technique of using a temporary variable to store the diagonal value. Further, there were approximately the same number of attempts made to come to that conclusion between the two--human took 2 attempts beyond the `trans` function baseline, and genAI took until the 3rd prompting. 
+As we can see from the above, the _32x32_ bests met exactly. From the code generated on both ends, both human and genAI came to the same technique of using a temporary variable to store the diagonal value. Further, there were approximately the same number of attempts made to come to that conclusion--human took 2 attempts beyond the `trans` function baseline, and genAI took until the 3rd prompting. 
 
 The _64x64_ is likely the most interesting to look at the differences of. From the human side, it was by far the most difficult to analyze, requiring much slow analysis of the set patterns and creativity in generating a solution. It also took the most failures of all the matrices, which meant days of attempts being concocted until the final success was met. 
 
-Even after all that, genAI was able to produce a better solutions by about _90_ misses. Further, it only took 3 attempts of prompting to get a valid, under the target bound solution, which is impressive compared to the pains it took to generate something without being able to use it.
+Even after all that, genAI was able to produce a better solution by about _90_ misses. Further, it only took 3 attempts of prompting to get a valid, under the target bound solution, which is impressive compared to the pains it took to generate something without being able to use it.
 
-Finally, the _61x67_ was however beat by the human by about _80_ misses. The two methods used are slightly different in nature, as will be discussed below, but one strategy was clearly still slightly better than the other. However, given that both solutions are under the goal boundary, each are valid in terms of minimizing the misses.
+Finally, the _61x67_ was triumphiantly beat by the human by about _80_ misses. The two methods used are slightly different in nature, as will be discussed below, but one strategy was clearly still slightly better than the other. However, given that both solutions are under the goal boundary, each are valid in terms of minimizing the misses.
 
 === Code Generation Comparisons
 
@@ -273,11 +278,11 @@ The main differences in human and genAI code appear to lie primarily in
 
 ==== Time
 
-Overall the human generated solutions took around a week to develop to their current best miss rates. A bulk of this time was purely in initially beginning by toying around with code without any real intelligent goals in mind. This provided enough failure to start actually attempting the optimization in a way that was based on the set layout knowledge (as mentioned, hand drawing the patterns or using Excel sheets to create set color fills was very helpful). Then, the building of each attempt, which was built upon the prior failure, involved at times complex implementation details that had to be tested for correctness locally, only to be then tested for miss rate data.
+Overall the human generated solutions took around a week to develop to their current best miss rates. A bulk of this time was purely in initially beginning by toying around with code without any real clever ideas in mind. This provided enough failure to start actually attempting the optimization in a way that was based on the set layout knowledge (as mentioned, hand drawing the patterns or using Excel sheets to create set color fills was very helpful). Then, the building of each attempt, which was built upon the prior failure, involved at times complex implementation details that had to be tested for correctness locally, only to be then tested for miss rate data.
 
-All of this together, culminating to a week's worth of frustration, did however come together into a deeper undestanding of the cache mechanisms and a layer of creative problem solving in this context that is a worthwhile skill for real-world applications. 
+All of this together, culminating to a week's worth of frustration, did however come together into a deeper understanding of the cache mechanisms and a layer of creative problem solving in this context, leading to a worthwhile skill for real-world applications. 
 
-However, that is not to say that genAI did not have it's uses here. The solutions that genAI, in spite of strange behavior in the initial prompts, took only a day to piece together. In terms of a real-life consequence, a workplace would likely perfer the inclusion of this tool to see if it can cut down the time taken on coming up with a solution to save the most important asset: money. Using this tool can be tremendously useful, then, freeing up time spent on the grunt work and providing a usable solution. This approach could be used postively to generate one or more optimized solutions on which to step in an improve as needed, cutting through the time to develop those initial failures to better focus on a final fine-tuned solution.
+However, that is not to say that genAI did not have it's uses here. The solutions that genAI, in spite of strange behavior in the initial prompts, took only a day to piece together. In terms of a real-life consequence, a workplace would likely prefer the inclusion of this tool to see if it can cut down the time taken on coming up with a solution to save the most important asset: money. Using this tool can be tremendously useful, then, freeing up time spent on the grunt work and providing a usable solution. This approach could be used postively to generate one or more optimized solutions on which to step in an improve as needed, cutting through the time to develop those initial failures to better focus on a final fine-tuned solution.
 
 ==== Understandibility
 
@@ -285,19 +290,19 @@ We nevertheless must discuss understandibility in two contexts: (1) Understandin
 
 On first understanding the code from a technical perspective, the human code submitted has the benefit of the comments being as verbose as needed--as much for the developer as for the reader. Considering at least the _64x64_ is an admittedly long and somewhat convoluted solution for the human code, these comments are necessary to even begin to piece together what we are doing mechanically. 
 
-On the topic of convlusion, the genAI solutions have the opposing perk of having the same or less number lines overall. This is a huge improvement over the human code as most notable in the _64x64_ solution, which comes into about _133_ lines, as opposed to the _70_ line solution from ChatGPT that even performed better than the human solution. Generally, the shorter solution is easier to digest, along with straightforward commenting to interpret the intention of the code. 
+On the topic of convlusion, the genAI solutions have the opposing perk of having the same or less number lines overall. This is a huge improvement over the human code as most notable in the _64x64_ solution, which comes into about _133_ lines, as opposed to the _70_ line solution from ChatGPT that out-performed the human solution. Generally, the shorter solution is easier to digest, along with straightforward commenting to interpret the intention of the code. 
 
 This topic naturally leads into discussing the second point: understanding why the code works. We are able to see the general mechanics of the genAI code functionality as specified in comments. A drawback, nevertheless, is in missing why this code works. 
 
-When discussing the human code development process, and walking through all failures, we can see the exact train of thought that led to the final solution, starting with the most basic algorithm to the best. This is exactly what we miss in ChatGPT code. There has to be further prompting in order to get the explanation of why exactly this works. Even then, there has to be an element of wariness when reading the explanation due to the potential hallucinations of the black-box. The human instead has an explanation that can be built up from failures, learning, and data to support the next step justification, making the process more understandable at a deeper level to both developer and reader. Additionally, the process can be read by others to improve upon, since others may see some sort of successful alternate approach from the development process that the original developer did not recognize. In all, the end answer is not always the only useful piece of the solution process.
+When discussing the human code development process, we can see the exact train of thought that led to the final solution, starting with the most basic algorithm to the best. This is exactly what we miss in ChatGPT code. There has to be further prompting in order to get the explanation of why exactly this works. Even then, there has to be an element of wariness when reading the explanation due to the potential hallucinations of the black-box. The human instead has an explanation that can be built up from failures, learning, and data to support the next step justification, making the process more understandable at a deeper level to all consuming it. Additionally, the process can be read by others to improve upon, since others may see some sort of successful alternate approach from the development process that the original developer did not recognize. In all, the end answer is not always the only useful piece of the solution process.
 
 ==== Methodical Development
 
-As evidenced a discussed prior, ChatGPT's greatest downfall in this process was the ability for it to ignore prompting, break its own code, and output unpredictably. This was, as seen by the secondary prompting technique of generating methods versus generating solutions all in one fixing many of the issues, a fault of the prompting. Just as people do, ChatGPT performed far better in terms of generating a functional solution by forcing it to separate the problems into separate but related pieces. 
+As detailed prior, ChatGPT's greatest downfall in this process was the ability for it to ignore prompting, break its own code, and output unpredictably. This was, as seen by the secondary prompting technique of generating methods versus generating solutions all in one fixing many of the issues, a fault of the prompting. Just as people do, ChatGPT performed far better in terms of generating a functional solution by forcing it to separate the problems into separate but related pieces. 
 
 Naturally, the human code was generated starting with the perceived simplest matrix first (_32x32_) and working towards the harder cases (_64x64_, _61x67_). This methodical development made it simpler to use known successful techniques in the harder cases and then tailor the solutions according to the unique problem needs. We will therefore hypothesize that this would have been a similiarly better tactic in prompting genAI to produce a faster success. Further trials should be conducted on this strategy to verify, but so far this experiment suggests that this is the case.
 
-Finally, as easy as it is to cast stones at genAI for having unpredictable side-effects and breaking its own code, there were admittedly many times that the human code did the same thing while testing functionality. Typically nothing was being broken outside of a specific method, but the potential for mistakes in complicated solution implementation was very high during human development. So, with more focused prompting, genAI shaves much of that headache successfully.
+Finally, as easy as it is to cast stones at genAI for having unpredictable side-effects and breaking its own code, there were admittedly many times that the human developer did the same thing while testing functionality. Typically nothing was being broken outside of a specific method, but the potential for mistakes in complicated solution implementation was very high during human development. So, with more focused prompting, genAI shaves much of that headache successfully.
 
 == Conclusion
 
@@ -305,14 +310,13 @@ To put all pieces together, human and genAI code came in quite close in performa
 
 The term "better" here can have different meanings, and it depends on the goal of the exercise. As we have seen, genAI can produce a solution in a few moments that is better than one that took a human days to develop from scratch. From a perspective on time saving, genAI is absolutely a tool that should be utilized to this end. As long as the tool is used appropriately and consciously, such as prompting in small pieces to not overwhelm the model into clashing with itself and being aware of unpredictability, this can be an incredible starting point for solving a problem, or improving upon a decent solution. 
 
-But the term "better" can also mean the process of learning how to think in terms of the problem: to learn the intricacies and nuances of caches, how to use knowledge of the cache to improve upon failures, and to truly understand how to work within these confines. Although genAI can a quick, perfectly acceptable answer, the learning process is often far stronger when compounded by failure--something that genAI takes out of the equation entirely.
+But the term "better" can also mean the process of learning how to think in terms of the problem: to learn the intricacies and nuances of caches, how to use knowledge of the cache to improve upon failures, and to truly understand how to work within these confines. Although genAI can generate a quick, perfectly acceptable answer, the learning process is often far stronger when compounded by failure--something that genAI takes out of the equation entirely.
+
+In conclusion, both approaches had their benefits and drawbacks. Depending on the goal in mind, it is up to personal reponsibility to identify the appropriate usage of this tool given the context.
 
 == References
 ChatGPT self-reported as using the model *GPT-5 thinking mini*. While there is not a lot of information on this specific model provided by OpenAI, there is an overview of GPT-5 as a whole located at #link("https://openai.com/index/introducing-gpt-5/", text("*this link*")).
 In general, "thinking" refers to a technology introduced into the model that allows it to process information for an extended period of time before outputting a result. "mini" represents a smaller version of their model that, while not being as well-featured or powerful, tends to run faster. 
-
-== Conclusion
-In conclusion, both approaches had their benefits and drawbacks. Depending on the goal in mind, it is up to personal reponsibility to identify the appropriate usage of this tool given the context.
 
 == Appendix
 
