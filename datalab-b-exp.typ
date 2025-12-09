@@ -305,6 +305,11 @@ The term "better" here can have different meanings, and it depends on the goal o
 
 But the term "better" can also mean the process of learning how to think in terms of the problem: to learn the intricacies and nuances of caches, how to use knowledge of the cache to improve upon failures, and to truly understand how to work within these confines. Although genAI can a quick, perfectly acceptable answer, the learning process is often far stronger when compounded by failure--something that genAI takes out of the equation entirely.
 
+== References
+ChatGPT self-reported as using the model *GPT-5 thinking mini*. While there is not a lot of information on this specific model provided by OpenAI, there is an overview of GPT-5 as a whole located at #link("https://openai.com/index/introducing-gpt-5/", text("*this link*")).
+In general, "thinking" refers to a technology introduced into the model that allows it to process information for an extended period of time before outputting a result. "mini" represents a smaller version of their model that, while not being as well-featured or powerful, tends to run faster. 
+
+== Conclusion
 In conclusion, both approaches had their benefits and drawbacks. Depending on the goal in mind, it is up to personal reponsibility to identify the appropriate usage of this tool given the context.
 
 == Appendix
@@ -315,6 +320,6 @@ Some notes on formatting that are likely useful for the reader.
 
 - `trans_human.c`: All methods to yield results discussed in report, as formatted for enabling running of `./test-trans` and `driver.py`. The attempt numbers correspond to the order the attempt is discussed in the report. When running `./test-trans`, all of these attempts will run for the given size. Feel free to comment out the registration of any of these in `registerFunctions()`. `transpose_submit()` will run the best for each size case.
 - `ai_trans.c`: The original `trans.c` file modified and filled in with output produced by ChatGPT. The code in this file is the most recent version containing three spearate function calls. 
-- `ai_trans_old.c`: This is an older version of the code that ChatGPT generated, where all three cases were handled inside of one function. Implementing the code in this manner led to issues, which necessitated a different approach. 
+- `ai_trans_oldX.c`: These are older versions of the code that ChatGPT generated, where all three cases were handled inside of one function. Implementing the code in this manner led to issues, which necessitated a different approach. X corresponds to the Xth attempt at generating the code. 
 - `trans_human_results.csv`: Results as gathered from `./test-trans` functionality for each size, corresponding to function names in `trans_human.c`. Formatted in the order: size, function name, hits, misses, evictions.
-- `ai_trans_results.csv`: Results gathered from running `driver.py` and formatted 
+- `ai_trans_results.csv`: Results gathered from testing with `./test-trans` on each size for each version. 
