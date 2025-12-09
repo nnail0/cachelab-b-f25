@@ -29,7 +29,7 @@ The overarching motivating factor of the work done in this experiment is to high
 
 This report is organized into 4 sections beyond this Introduction.
 + Methods: General summary of methods used to generate both human and genAI code for transposition.
-+ Data Collection: In depth discussion of the process in which human code was created, including failues. Likewise, in depth discussion of prompting attempts with genAI to generate code with the same goal.
++ Data Collection: In depth discussion of the process in which human code was created, including failures. Likewise, in depth discussion of prompting attempts with genAI to generate code with the same goal.
 + Results and Discussion: Discussion of results and primary differences in code approaches.
 + Conclusion: Concluding points of the report.
 + References: All references of use in this project.
@@ -41,7 +41,7 @@ This project was primarily split into two natural halves between the two partner
 + One person's focus was upon, entirely from scratch, approaching the optimization by hand.
 + The other person's focus was on the generation of solutions with generative AI. 
 
-The following parts are the methodologies used in generating potential solutions. To analyze the solutions, we will be using the provided cache simulation code to gather miss rate data to better compare and build up approches.
+The following parts are the methodologies used in generating potential solutions. To analyze the solutions, we will be using the provided cache simulation code to gather miss rate data to better compare and build up approaches.
 
 === Human
 
@@ -50,11 +50,11 @@ The human generated code was developed in the following order:
 + _64x64_ optimization
 + _61x67_ optimization
 
-The most useful approach to each of these problems was developed by the approach to the first. Picture/color representations of the set overlays on the matrics were generated to a degree in which the problematic miss rate areas were visibly simple to identify. Then, as will be discussed in the data collection portion of this report, solutions to mitigate these miss rates were developed based upon successful changes.
+The most useful approach to each of these problems was developed by the approach to the first. Picture/color representations of the set overlays on the matrices were generated to a degree in which the problematic miss rate areas were visibly simple to identify. Then, as will be discussed in the data collection portion of this report, solutions to mitigate these miss rates were developed based upon successful changes.
 
 === GenAI
 
-The genAI code was developed with ChatGPT 5 mini (with reasoning), which is the version of ChatGPT offered on a trial basis to those who have an OpenAI account but do not pay for any other tier. The model opted to approach the code in a rather monolothic manner and generated code for all three cases to put into one function. 
+The genAI code was developed with ChatGPT 5 mini (with reasoning), which is the version of ChatGPT offered on a trial basis to those who have an OpenAI account but do not pay for any other tier. The model opted to approach the code in a rather monolithic manner and generated code for all three cases to put into one function. 
 
 When provided with code from the model, the code that was already in the `transpose-submit` function was directly and fully replaced, even if 1 or 2 out of the three ended up correct during the previous iteration. This was likely a suboptimal approach, but it demonstrates the deficiencies of ChatGPT's "memory". It likely would have been beneficial to split up the code generation into three different chunks to allow the model to analyze each case separately. The results of this method will be discussed later in the report. 
 
@@ -177,7 +177,7 @@ Below, we discuss:
 - The results of each evolution of the code. 
 - The strategy that the model employed at each setup.
 - What ended up being the winning strategy for each case, despite the three cases not able to exist in harmony with each other.
-- Future experiments to conduct with the code to see if improvements are made (i.e. what if, instead of one monolothic function call, there were three smaller function calls for each case?).
+- Future experiments to conduct with the code to see if improvements are made (i.e. what if, instead of one monolithic function call, there were three smaller function calls for each case?).
 
 The following iterations correspond to the following files in the repository:
 1. `ai_trans_old1.c`
@@ -200,7 +200,7 @@ In addition to succeeding with the _32x32_ case, the secondary goal was to remed
 The winning strategy for this case ended up being pretty simple, employing _8x8_ blocking and solving each block individually with the naive method. With less data to handle at each step, less cache misses were recorded.
 
 ==== _64x64_
-This code followed a bit of a different story. The development that this code took further suggests that there may be some side effects with some of the variables being used, since we cannot currently provide a plausable explanation for what else could be happening; the model maintained the same structure and order in the code as it did previously, so some faults were unclear in source. 
+This code followed a bit of a different story. The development that this code took further suggests that there may be some side effects with some of the variables being used, since we cannot currently provide a plausible explanation for what else could be happening; the model maintained the same structure and order in the code as it did previously, so some faults were unclear in source. 
 - First run: invalid result. This code iteration produced suboptimal yet valid _32x32_ code and right-on-the-spot _61x67_ code, which was strange. Taking a look at the code, the cause cause of the invalidity was never fully determined. 
 - Second run: Like with other versions, the code that was generated produced 0 misses, which is effectively impossible and indicates that some sort of issue occurred with this iteration. ChatGPT was then prompted to revisit this code and ensure that the setup was being conducted properly. 
 - Third run: Like with the _32x32_ case, the _64x64_ code hit well under the miss target of _1300_ and netted *_1180_* misses. This came at the cost of breaking the _61x67_ test case. 
@@ -209,7 +209,7 @@ Runs beyond Run 2 were to try and get a round of code that would integrate the s
 
 The model's winning strategy proved to be somewhat successful, but after looking at what it took to hit the target miss rate in the human-generated code, this makes sense. From what we can understand of the code, it followed three major phases: 
 + Handled the first four rows of each _8x8_ block in a standard fashion, starting from the top left. 
-+ Switched to a different strategy that involved breaking it down into further _4x4_ blocks and transposing them in a specific order. This seemed to handle two or three of the four _4x4_ blocks that the the code partitioned off. This was the only section of code out of the three cases that used the eight extra variables alotted to it. 
++ Switched to a different strategy that involved breaking it down into further _4x4_ blocks and transposing them in a specific order. This seemed to handle two or three of the four _4x4_ blocks that the the code partitioned off. This was the only section of code out of the three cases that used the eight extra variables allotted to it. 
 + Finished off the final _4x4_ block with a more standard transpose techniques. 
 
 ==== _61x67_
@@ -224,14 +224,14 @@ The winning strategy for the _61x67_ case was fairly simple and adopted most of 
 ==== Second Attempt: Three Separate functions
 As mentioned, there was an intimation that there were some side effects occurring under the hood as a result of having all three cases in the same function. As a result, the model was prompted to make another attempt. This time, it was given explicit directions to split the code into three separate cases. This ended up being the solution. 
 
-Upon closer inspection, it appears that ChatGPT added in some corrections to the _32x32_ code, which makes begs more questions about where exactly the problem was happening before. Regardless, it appears that the model was able to reflect on its own mistakes from a previous conversation and find what went wrong. This could point to the previously mentioned "short-term memory" issues that that were mentioned earlier, or it could be something different. 
+Upon closer inspection, it appears that ChatGPT added in some corrections to the _32x32_ code, which begs more questions about where exactly the problem was happening before. Regardless, it appears that the model was able to reflect on its own mistakes from a previous conversation and find what went wrong. This could point to the previously mentioned "short-term memory" issues that were mentioned earlier, or it could be something different. 
 
 ==== Code Quality
-Some important aspects in measuring code quality involve legibility, conciseness, and correctness. In all, the model was able to produce code that that was mostly followable. 
+Some important aspects in measuring code quality involve legibility, conciseness, and correctness. In all, the model was able to produce code that was mostly followable. 
 
 For the _64x64_ case, the code was not terribly concise, which made it difficult to parse. However, it was able to generate a satisfactory result. The other cases could be distilled down to simple code that did not require any lines. This made it concise and easy to follow. 
 
-Lastly, correctness seem to be hit or miss. We were not able to get all three of the individual cases to cooperate with each other in the same function, begging the question about if registering three different functions would have been better. However, over three iterations, we were eventually able to get individual cases for all three. 
+Lastly, correctness seemed to be hit or miss. We were not able to get all three of the individual cases to cooperate with each other in the same function, begging the question about if registering three different functions would have been better. However, over three iterations, we were eventually able to get individual cases for all three. 
 
 In addition to these main three cases, other basic conventions were followed. The code itself was readable and structurally legible, and the motivations behind implementing them were comprehendible. 
 
@@ -267,13 +267,13 @@ The _64x64_ is likely the most interesting to look at the differences of. From t
 
 Even after all that, genAI was able to produce a better solution by about _90_ misses. Further, it only took 3 attempts of prompting to get a valid, under the target bound solution, which is impressive compared to the pains it took to generate something without being able to use it.
 
-Finally, the _61x67_ was triumphiantly beat by the human by about _80_ misses. The two methods used are slightly different in nature, as will be discussed below, but one strategy was clearly still slightly better than the other. However, given that both solutions are under the goal boundary, each are valid in terms of minimizing the misses.
+Finally, the _61x67_ was triumphantly beat by the human by about _80_ misses. The two methods used are slightly different in nature, as will be discussed below, but one strategy was clearly still slightly better than the other. However, given that both solutions are under the goal boundary, each are valid in terms of minimizing the misses.
 
 === Code Generation Comparisons
 
 The main differences in human and genAI code appear to lie primarily in 
 + Time taken to generate solutions.
-+ Understandibility of the solution.
++ Understandability of the solution.
 + Ability to build up the solution methodically.
 
 ==== Time
@@ -284,13 +284,13 @@ All of this together, culminating to a week's worth of frustration, did however 
 
 However, that is not to say that genAI did not have it's uses here. The solutions that genAI, in spite of strange behavior in the initial prompts, took only a day to piece together. In terms of a real-life consequence, a workplace would likely prefer the inclusion of this tool to see if it can cut down the time taken on coming up with a solution to save the most important asset: money. Using this tool can be tremendously useful, then, freeing up time spent on the grunt work and providing a usable solution. This approach could be used postively to generate one or more optimized solutions on which to step in an improve as needed, cutting through the time to develop those initial failures to better focus on a final fine-tuned solution.
 
-==== Understandibility
+==== Understandability
 
-We nevertheless must discuss understandibility in two contexts: (1) Understanding the code itself in terms of legibility and conciseness and (2) understanding why the code works.
+We nevertheless must discuss understandability in two contexts: (1) Understanding the code itself in terms of legibility and conciseness and (2) understanding why the code works.
 
 On first understanding the code from a technical perspective, the human code submitted has the benefit of the comments being as verbose as needed--as much for the developer as for the reader. Considering at least the _64x64_ is an admittedly long and somewhat convoluted solution for the human code, these comments are necessary to even begin to piece together what we are doing mechanically. 
 
-On the topic of convlusion, the genAI solutions have the opposing perk of having the same or less number lines overall. This is a huge improvement over the human code as most notable in the _64x64_ solution, which comes into about _133_ lines, as opposed to the _70_ line solution from ChatGPT that out-performed the human solution. Generally, the shorter solution is easier to digest, along with straightforward commenting to interpret the intention of the code. 
+On the topic of convolution, the genAI solutions have the opposing perk of having the same or less number lines overall. This is a huge improvement over the human code as most notable in the _64x64_ solution, which comes into about _133_ lines, as opposed to the _70_ line solution from ChatGPT that out-performed the human solution. Generally, the shorter solution is easier to digest, along with straightforward commenting to interpret the intention of the code. 
 
 This topic naturally leads into discussing the second point: understanding why the code works. We are able to see the general mechanics of the genAI code functionality as specified in comments. A drawback, nevertheless, is in missing why this code works. 
 
@@ -300,7 +300,7 @@ When discussing the human code development process, we can see the exact train o
 
 As detailed prior, ChatGPT's greatest downfall in this process was the ability for it to ignore prompting, break its own code, and output unpredictably. This was, as seen by the secondary prompting technique of generating methods versus generating solutions all in one fixing many of the issues, a fault of the prompting. Just as people do, ChatGPT performed far better in terms of generating a functional solution by forcing it to separate the problems into separate but related pieces. 
 
-Naturally, the human code was generated starting with the perceived simplest matrix first (_32x32_) and working towards the harder cases (_64x64_, _61x67_). This methodical development made it simpler to use known successful techniques in the harder cases and then tailor the solutions according to the unique problem needs. We will therefore hypothesize that this would have been a similiarly better tactic in prompting genAI to produce a faster success. Further trials should be conducted on this strategy to verify, but so far this experiment suggests that this is the case.
+Naturally, the human code was generated starting with the perceived simplest matrix first (_32x32_) and working towards the harder cases (_64x64_, _61x67_). This methodical development made it simpler to use known successful techniques in the harder cases and then tailor the solutions according to the unique problem needs. We will therefore hypothesize that this would have been a similarly better tactic in prompting genAI to produce a faster success. Further trials should be conducted on this strategy to verify, but so far this experiment suggests that this is the case.
 
 Finally, as easy as it is to cast stones at genAI for having unpredictable side-effects and breaking its own code, there were admittedly many times that the human developer did the same thing while testing functionality. Typically nothing was being broken outside of a specific method, but the potential for mistakes in complicated solution implementation was very high during human development. So, with more focused prompting, genAI shaves much of that headache successfully.
 
@@ -312,7 +312,7 @@ The term "better" here can have different meanings, and it depends on the goal o
 
 But the term "better" can also mean the process of learning how to think in terms of the problem: to learn the intricacies and nuances of caches, how to use knowledge of the cache to improve upon failures, and to truly understand how to work within these confines. Although genAI can generate a quick, perfectly acceptable answer, the learning process is often far stronger when compounded by failure--something that genAI takes out of the equation entirely.
 
-In conclusion, both approaches had their benefits and drawbacks. Depending on the goal in mind, it is up to personal reponsibility to identify the appropriate usage of this tool given the context.
+In conclusion, both approaches had their benefits and drawbacks. Depending on the goal in mind, it is up to personal responsibility to identify the appropriate usage of this tool given the context.
 
 == References
 ChatGPT self-reported as using the model *GPT-5 thinking mini*. While there is not a lot of information on this specific model provided by OpenAI, there is an overview of GPT-5 as a whole located at #link("https://openai.com/index/introducing-gpt-5/", text("*this link*")).
@@ -325,7 +325,7 @@ In general, "thinking" refers to a technology introduced into the model that all
 Some notes on formatting that are likely useful for the reader.
 
 - `trans_human.c`: All methods to yield results discussed in report, as formatted for enabling running of `./test-trans` and `driver.py`. The attempt numbers correspond to the order the attempt is discussed in the report. When running `./test-trans`, all of these attempts will run for the given size. Feel free to comment out the registration of any of these in `registerFunctions()`. `transpose_submit()` will run the best for each size case.
-- `ai_trans.c`: The original `trans.c` file modified and filled in with output produced by ChatGPT. The code in this file is the most recent version containing three spearate function calls. 
+- `ai_trans.c`: The original `trans.c` file modified and filled in with output produced by ChatGPT. The code in this file is the most recent version containing three separate function calls. 
 - `ai_trans_oldX.c`: These are older versions of the code that ChatGPT generated, where all three cases were handled inside of one function. Implementing the code in this manner led to issues, which necessitated a different approach. X corresponds to the Xth attempt at generating the code. 
 - `trans_human_results.csv`: Results as gathered from `./test-trans` functionality for each size, corresponding to function names in `trans_human.c`. Formatted in the order: size, function name, hits, misses, evictions.
 - `ai_trans_results.csv`: Results gathered from testing with `./test-trans` on each size for each version. 
