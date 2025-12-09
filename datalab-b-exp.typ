@@ -172,6 +172,15 @@ Below, we discuss:
 - What ended up being the winning strategy for each case, despite the three cases not able to exist in harmony with each other.
 - Future experiments to conduct with the code to see if improvements are made (i.e. what if, instead of one monolothic function call, there were three smaller function calls for each case?).
 
+The following iterations correspond to the following files in the repository:
+1. `ai_trans_old1.c`
+2. `ai_trans_old2.c`
+3. `ai_trans_old3.c`
+4. `ai_trans.c` 
+
+`ai_trans.c` contains the final version of the code with the three cases separated into individual functions. This attempt is discussed after attempts 1-3.
+
+
 ==== _32x32_
 
 The 32x32 case, despite being the "simplest", was a case that was difficult for the model to score well on immediately. It took about four attempts to generate code that hit under _300_ misses. 
