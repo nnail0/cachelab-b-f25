@@ -153,6 +153,8 @@ this effectively move the B storage blocks left-right row-wise and A access bloc
 
 === GenAI
 
+*NOTE*: When returning to fill out information in the AI results CSV, the results differ than what were originally observed, likely due to a different copy-paste method (what code snippets I let ChatGPT generated vs. how much of it I actually copied over) employed that fixed issues with validity. The results in this document are what I actually observed, while the results in the CSV differ due to these "enhancements". This means that the code generated may have been more accurate and led to less invalid results than originally claimed. There was likely an element of human error involved here.
+
 For the genAI section of the code, ChatGPT 5 mini (with intelligence) was handed the entire PDF, in addition to some instructions provided to it: 
 
 #block(
@@ -217,11 +219,6 @@ For the _64x64_ case, the code was not terribly concise, which made it difficult
 Lastly, correctness seem to be hit or miss. We were not able to get all three of the individual cases to cooperate with each other in the same function, begging the question about if registering three different functions would have been better. However, over three iterations, we were eventually able to get individual cases for all three. 
 
 In addition to these main three cases, other basic conventions were followed. The code itself was readable and structurally legible, and the motivations behind implementing them were comprehendible. 
-
-*nathan note*: elaborate more on the comparison between human and genAI code, strengths and weaknesses, 
-- create csv with the results. 
-- ask soraya about how to organize when chatgpt decided to make one large unit of a function. 
-- maybe prompt more? see if there is more exploration to be had that could expand the story. 
 
 == Exploratory Analysis and Discussion 
 
