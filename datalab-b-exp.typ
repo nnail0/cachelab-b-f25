@@ -27,10 +27,9 @@ Primarily, the goal, in a tangible sense is to get both methods to reach under a
 
 The overarching motivating factor of the work done in this experiment is to highlight the strengths and weaknesses of both approaches to the problem. On one side, we will explore the lengthy process to develop code to meet this goal entirely from scratch without the benefit of genAI assistance. Likewise, we will dive into the idealistic code generation with genAI, discussing its benefits and drawbacks alike. With all pieces together, we will end by discussing the main differences in the approaches to the problem, focusing on the key takeaways from our results.
 
-This report is organized into 5 sections beyond this Introduction.
+This report is organized into 4 sections beyond this Introduction.
 + Methods: General summary of methods used to generate both human and genAI code for transposition.
 + Data Collection: In depth discussion of the process in which human code was created, including failues. Likewise, in depth discussion of prompting attempts with genAI to generate code with the same goal.
-+ Exploratory Analysis and Discussion: Discussion of results and primary differences in code approaches.
 + Conclusion: Concluding points of the report.
 + Appendix: Brief inclusion of documentation details about documents included with submission
 
@@ -219,8 +218,6 @@ For the _64x64_ case, the code was not terribly concise, which made it difficult
 Lastly, correctness seem to be hit or miss. We were not able to get all three of the individual cases to cooperate with each other in the same function, begging the question about if registering three different functions would have been better. However, over three iterations, we were eventually able to get individual cases for all three. 
 
 In addition to these main three cases, other basic conventions were followed. The code itself was readable and structurally legible, and the motivations behind implementing them were comprehendible. 
-
-== Exploratory Analysis and Discussion 
 
 === Results
 
